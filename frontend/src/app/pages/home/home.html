@@ -39,4 +39,10 @@
       </div>
     </div>
   </div>
+
+  <div class="empty-state" *ngIf="products().length === 0">
+    <div class="empty-icon">📱</div>
+    <h2>لا توجد منتجات حالياً</h2>
+    <p>سيتم إضافة أحدث الهواتف والإكسسوارات قريباً. يرجى التحقق لاحقاً!</p>
+  </div>
 </div>

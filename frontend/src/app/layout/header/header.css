@@ -212,6 +212,13 @@
 
 /* Mobile Responsiveness for Header */
 @media (max-width: 768px) {
+  .brand-name {
+    font-size: 1.4rem;
+  }
+  .logo {
+    height: 35px;
+    width: 35px;
+  }
   .main-header.hero-mode {
     height: auto;
     min-height: 60vh;
@@ -233,6 +240,13 @@
 }
 
 @media (max-width: 480px) {
+  .brand-name {
+    font-size: 1.1rem;
+  }
+  .logo {
+    height: 30px;
+    width: 30px;
+  }
   .main-header.hero-mode {
     min-height: 50vh;
   }
