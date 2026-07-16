@@ -61,8 +61,14 @@
   transition: var(--transition);
 }
 
+.social-icons a svg {
+  width: 20px;
+  height: 20px;
+}
+
 .social-icons a:hover {
   background-color: var(--secondary-color);
+  color: var(--primary-color);
   transform: translateY(-3px);
 }
 

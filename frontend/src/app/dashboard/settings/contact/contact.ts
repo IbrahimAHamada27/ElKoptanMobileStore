@@ -64,6 +64,14 @@ import { ToastService } from '../../../core/services/toast.service';
         <label>رابط واتساب (رقم الهاتف مع كود الدولة مثل: 201012345678)</label>
         <input type="text" [(ngModel)]="contactData.whatsapp" (ngModelChange)="checkForChanges()" class="form-control">
       </div>
+      <div class="form-group">
+        <label>رابط تيك توك</label>
+        <input type="url" [(ngModel)]="contactData.tiktok" (ngModelChange)="checkForChanges()" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>رابط ماسنجر</label>
+        <input type="url" [(ngModel)]="contactData.messenger" (ngModelChange)="checkForChanges()" class="form-control">
+      </div>
     </div>
 
     <div class="save-bar">
@@ -99,7 +107,9 @@ export class DashboardContact {
     email: 'info@alqubtan.com',
     facebook: '',
     instagram: '',
-    whatsapp: '201012345678'
+    whatsapp: '201012345678',
+    tiktok: '',
+    messenger: ''
   };
 
   originalDataString: string = '';
