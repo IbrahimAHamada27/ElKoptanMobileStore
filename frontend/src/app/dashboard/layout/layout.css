@@ -80,3 +80,40 @@
   flex-grow: 1;
   overflow-y: auto;
 }
+
+/* Mobile Responsiveness for Admin Panel */
+@media (max-width: 768px) {
+  .admin-container {
+    flex-direction: column;
+  }
+  
+  .admin-sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  
+  .admin-menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+  }
+  
+  .admin-menu li {
+    border-bottom: none;
+    margin: 5px;
+  }
+  
+  .admin-menu a {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  .admin-menu a.active {
+    border-right: none;
+    border-bottom: 3px solid #fff;
+  }
+}
