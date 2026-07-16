@@ -233,9 +233,33 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-  .product-details { padding: 8px; }
-  .product-name { font-size: 0.85rem; }
-  .current-price { font-size: 1rem; }
+  
+  .offers-container {
+    padding: 10px;
+  }
+  
+  .product-details {
+    padding: 8px;
+    gap: 4px;
+  }
+  
+  .product-name {
+    font-size: 0.8rem;
+  }
+  
+  .current-price {
+    font-size: 0.95rem;
+  }
+
+  .old-price {
+    font-size: 0.75rem;
+  }
+
+  .add-to-cart-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+  }
   .hero-title { font-size: 2.2rem; }
   .hero-offers { padding: 60px 20px 80px; }
   .offers-container { margin-top: -30px; }

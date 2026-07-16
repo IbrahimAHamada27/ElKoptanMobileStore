@@ -55,7 +55,7 @@ async function initSuperAdmin() {
         // Check if existing (we hash to compare since emails are SHA-256 hashed in database)
         const crypto = require('crypto');
         const hashedEmail = crypto.createHash('sha256').update(superAdminUser.trim().toLowerCase()).digest('hex');
-        
+
         const existing = await User.findOne({ email: hashedEmail });
         if (!existing) {
             // Mongoose pre-save hook will automatically hash name, email, and password.

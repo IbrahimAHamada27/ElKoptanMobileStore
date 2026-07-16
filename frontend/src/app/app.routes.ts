@@ -5,15 +5,12 @@ import { isPlatformBrowser } from '@angular/common';
 import { ProductService } from './core/services/product.service';
 import { AuthService } from './core/services/auth.service';
 
-export const productsResolver: ResolveFn<boolean> = async (route, state) => {
+export const productsResolver: ResolveFn<boolean> = (route, state) => {
   const productService = inject(ProductService);
-  if (productService.products().length > 0) {
-    return true;
-  }
-  try {
-    await productService.loadProducts();
-  } catch (err) {
-    console.error('Resolver failed to load products', err);
+  if (productService.products().length === 0) {
+    // We intentionally do not await this, so the page renders instantly
+    // while products load in the background.
+    productService.loadProducts();
   }
   return true;
 };

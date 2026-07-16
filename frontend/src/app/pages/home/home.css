@@ -175,13 +175,24 @@
   
   .product-details {
     padding: 8px;
+    gap: 4px;
   }
   
   .product-name {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
   
   .current-price {
-    font-size: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .old-price {
+    font-size: 0.75rem;
+  }
+
+  .add-to-cart-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
   }
 }
