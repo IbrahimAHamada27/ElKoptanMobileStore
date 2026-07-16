@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { SettingService } from '../../../core/services/setting.service';
+import { SettingService } from '../../core/services/setting.service';
 
 @Component({
   selector: 'app-footer',
