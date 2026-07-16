@@ -12,19 +12,10 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
 };
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads');
-        console.log('distination');
-    },
-    filename: (req, file, cb) => {
-        cb(null,Date.now()+'_', file.originalname);
-        console.log('filename'); 
-    }
-});
+const storage = multer.memoryStorage();
 
 const MG = 1024*1024;
-module.exports= multer({storage, fileFilter: fileFilter, limits: {fileSize: 2*MG}});
+module.exports = multer({storage, fileFilter: fileFilter, limits: {fileSize: 2*MG}});
 
 
 

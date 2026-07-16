@@ -40,7 +40,7 @@ export class ProductService {
         const mappedProducts = response.data.map((p: any) => ({
           ...p,
           id: p._id,
-          image: p.imagURL ? (p.imagURL.startsWith('http') ? p.imagURL : `${environment.baseUrl}/${p.imagURL.replace(/\\/g, '/')}`) : 'assets/images/logo.png',
+          image: p.imagURL ? (p.imagURL.startsWith('http') || p.imagURL.startsWith('data:') ? p.imagURL : `${environment.baseUrl}/${p.imagURL.replace(/\\/g, '/')}`) : 'assets/images/logo.png',
           isNew: p.isNewProduct
         }));
         this.productsSignal.set(mappedProducts);

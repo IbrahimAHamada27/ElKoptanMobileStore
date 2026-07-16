@@ -212,12 +212,19 @@
 
 /* Mobile Responsiveness for Header */
 @media (max-width: 768px) {
+  .main-header.hero-mode {
+    height: auto;
+    min-height: 60vh;
+    padding-top: 80px;
+    padding-bottom: 40px;
+  }
   .main-header.hero-mode .logo {
     height: 120px;
     width: 120px;
   }
   .main-header.hero-mode .brand-name {
     font-size: 2.2rem;
+    line-height: 1.2;
   }
   .hero-subtitle {
     font-size: 1rem;
@@ -226,16 +233,20 @@
 }
 
 @media (max-width: 480px) {
+  .main-header.hero-mode {
+    min-height: 50vh;
+  }
   .main-header.hero-mode .logo {
-    height: 100px;
-    width: 100px;
-    margin-bottom: -15px;
+    height: 90px;
+    width: 90px;
+    margin-bottom: 0px;
   }
   .main-header.hero-mode .brand-name {
     font-size: 1.8rem;
+    line-height: 1.3;
   }
   .hero-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     padding: 0 10px;
   }
 }

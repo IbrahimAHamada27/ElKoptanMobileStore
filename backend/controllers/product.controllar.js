@@ -15,7 +15,9 @@ exports.addProduct = async (req, res) => {
         
         if (!req.file) return res.status(400).json({error: 'Image is required'});
         
-        const imagURL = req.file.path;
+        const base64Data = req.file.buffer.toString('base64');
+        const imagURL = `data:${req.file.mimetype};base64,${base64Data}`;
+
         const myProduct = await product.create({name, price, desc, stock, imagURL, slug});
         res.status(201).json({massage:'product added' , data:myProduct});
     } catch (error) {
@@ -41,7 +43,8 @@ exports.updateProduct = async (req, res) => {
         const id = req.params.id;
         const updateData = req.body;
         if(req.file) {
-            updateData.imagURL = req.file.path;
+            const base64Data = req.file.buffer.toString('base64');
+            updateData.imagURL = `data:${req.file.mimetype};base64,${base64Data}`;
         }
         const updated = await product.findByIdAndUpdate(id, updateData, { new: true });
         if(!updated) return res.status(404).json({error:'product not found'});
