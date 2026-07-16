@@ -220,10 +220,13 @@
     width: 35px;
   }
   .main-header.hero-mode {
-    height: auto;
-    min-height: 60vh;
-    padding-top: 80px;
-    padding-bottom: 40px;
+    height: 100vh;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .main-header.hero-mode .logo-area {
+    gap: 15px;
+    transform: translateY(-20px);
   }
   .main-header.hero-mode .logo {
     height: 120px;
@@ -237,6 +240,9 @@
     font-size: 1rem;
     padding: 0 15px;
   }
+  .scroll-indicator {
+    bottom: 30px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -248,11 +254,15 @@
     width: 30px;
   }
   .main-header.hero-mode {
-    min-height: 50vh;
+    height: 100vh;
+  }
+  .main-header.hero-mode .logo-area {
+    gap: 10px;
+    transform: translateY(-20px);
   }
   .main-header.hero-mode .logo {
-    height: 90px;
-    width: 90px;
+    height: 100px;
+    width: 100px;
     margin-bottom: 0px;
   }
   .main-header.hero-mode .brand-name {
@@ -262,5 +272,8 @@
   .hero-subtitle {
     font-size: 0.9rem;
     padding: 0 10px;
+  }
+  .scroll-indicator {
+    bottom: 25px;
   }
 }
