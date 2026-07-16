@@ -1,0 +1,42 @@
+<header class="main-header" [class.hero-mode]="isHomePage && !isScrolled">
+  <div class="header-container">
+    <div class="menu-toggle" (click)="toggleMenu()" *ngIf="isScrolled || !isHomePage">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    
+    <a routerLink="/" class="logo-area">
+      <img src="assets/images/logo.jpg" alt="القبطان موبايل ستور" class="logo" />
+      <div class="brand-text">
+        <span class="brand-name">القبطان موبايل ستور</span>
+        <span class="hero-subtitle" *ngIf="isHomePage && !isScrolled">وجهتك الأولى لأحدث الهواتف والإكسسوارات بأسعار لا تقبل المنافسة</span>
+      </div>
+    </a>
+
+    <div class="scroll-indicator" *ngIf="isHomePage && !isScrolled">
+      <span>تصفح المنتجات</span>
+      <div class="arrow-down"></div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" *ngIf="isMenuOpen" (click)="toggleMenu()"></div>
+
+    <nav class="side-menu" [class.open]="isMenuOpen">
+      <div class="menu-header">
+        <h3>القائمة</h3>
+        <button class="close-btn" (click)="toggleMenu()">&times;</button>
+      </div>
+      <ul class="nav-links">
+        <li><a routerLink="/" (click)="toggleMenu()">الرئيسية</a></li>
+        <li><a routerLink="/phones" (click)="toggleMenu()">الهواتف</a></li>
+        <li><a routerLink="/accessories" (click)="toggleMenu()">الإكسسوارات</a></li>
+        <li><a routerLink="/offers" (click)="toggleMenu()">العروض المميزة</a></li>
+        <li><a routerLink="/cash" (click)="toggleMenu()">الكاش</a></li>
+        <li><a routerLink="/maintenance" (click)="toggleMenu()">الصيانة</a></li>
+        <li><a routerLink="/faq" (click)="toggleMenu()">الأسئلة الشائعة</a></li>
+        <li><a routerLink="/contact" (click)="toggleMenu()">التواصل</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

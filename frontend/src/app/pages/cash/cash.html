@@ -1,0 +1,212 @@
+<div class="page-container">
+  <h1 class="page-title">طرق الدفع (كاش وإنستا باي)</h1>
+  <p class="page-subtitle">نوفر لك طرق دفع سهلة ومريحة لإتمام مشترياتك بأمان وسرعة</p>
+  
+  <!-- InstaPay Section -->
+  <div class="instapay-section">
+    <div class="section-title-wrapper">
+      <span class="section-icon">⚡</span>
+      <h2>التحويل عبر إنستا باي (InstaPay)</h2>
+    </div>
+    
+    <div class="instapay-container">
+      <div class="instapay-card-visual">
+        <div class="instapay-logo-badge">InstaPay</div>
+        <div class="instapay-details-grid">
+          <div class="detail-item">
+            <span class="detail-label">عنوان الدفع (IPA):</span>
+            <div class="detail-value-wrapper">
+              <span class="detail-value highlight">{{ payment().instapayAccountName || 'لا يوجد عنوان دفع مضاف' }}</span>
+              <button class="btn-copy-small" (click)="copyText(payment().instapayAccountName, 'ipa')">
+                {{ copiedId === 'ipa' ? '✅ تم النسخ' : '📋 نسخ العنوان' }}
+              </button>
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">الاسم الذي يظهر:</span>
+            <div class="detail-value-wrapper">
+              <span class="detail-value">{{ payment().instapayDisplayName || 'لا يوجد اسم حساب مضاف' }}</span>
+              <button class="btn-copy-small" (click)="copyText(payment().instapayDisplayName, 'displayName')">
+                {{ copiedId === 'displayName' ? '✅ تم النسخ' : '📋 نسخ الاسم' }}
+              </button>
+            </div>
+          </div>
+          
+          <div class="detail-item" *ngIf="payment().instapayPhone">
+            <span class="detail-label">رقم الهاتف:</span>
+            <div class="detail-value-wrapper">
+              <span class="detail-value">{{ payment().instapayPhone }}</span>
+              <button class="btn-copy-small" (click)="copyText(payment().instapayPhone, 'ipPhone')">
+                {{ copiedId === 'ipPhone' ? '✅ تم النسخ' : '📋 نسخ الرقم' }}
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="instapay-action-wrapper" *ngIf="payment().instapayLink">
+          <a [href]="payment().instapayLink" class="btn-instapay-direct">
+            🚀 فتح تطبيق InstaPay والتحويل فوراً
+          </a>
+          <small class="instapay-tip">اضغط لفتح التطبيق تلقائياً (يعمل على الهواتف المحمولة)</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cash Wallets Section -->
+  <div class="cash-section">
+    <div class="section-title-wrapper">
+      <span class="section-icon">📱</span>
+      <h2>التحويل عبر محافظ الكاش (Vodafone, Orange, Etisalat, WE)</h2>
+    </div>
+
+    <p class="cash-instructions">اختر شبكتك، أدخل المبلغ المطلوب تحويله، وسيتم توليد كود الـ USSD المباشر للاتصال والتحويل على الفور.</p>
+
+    <div class="payment-methods">
+      <!-- Vodafone Cash -->
+      <div class="payment-card vf-theme" *ngIf="payment().vodafonePhone">
+        <div class="card-glow"></div>
+        <div class="payment-logo vf-cash">Vodafone Cash</div>
+        <h3>فودافون كاش</h3>
+        <p class="card-instruction">يرجى التحويل على الرقم التالي:</p>
+        
+        <div class="phone-display-container">
+          <div class="phone-number">{{ payment().vodafonePhone }}</div>
+          <button class="btn-copy-phone" (click)="copyText(payment().vodafonePhone, 'vfPhone')">
+            {{ copiedId === 'vfPhone' ? '✅ تم النسخ' : '📋 نسخ الرقم' }}
+          </button>
+        </div>
+
+        <div class="ussd-generator-form">
+          <label>أدخل المبلغ المراد تحويله (جنيه مصري):</label>
+          <input type="number" [(ngModel)]="vodafoneAmount" placeholder="مثال: 150" class="amount-input">
+          
+          <div class="generated-code-box" *ngIf="vodafoneAmount && vodafoneAmount > 0">
+            <span class="code-label">كود التحويل المباشر:</span>
+            <div class="code-value">{{ getVodafoneCode(payment().vodafonePhone) }}</div>
+            
+            <div class="action-buttons-grid">
+              <button class="btn-action-copy" (click)="copyText(getVodafoneCode(payment().vodafonePhone), 'vfCode')">
+                {{ copiedId === 'vfCode' ? '✅ تم نسخ الكود' : '📋 نسخ كود التحويل' }}
+              </button>
+              <a [href]="dialCode(getVodafoneCode(payment().vodafonePhone))" class="btn-action-dial">
+                📞 اتصال وتحويل
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Etisalat Cash -->
+      <div class="payment-card et-theme" *ngIf="payment().etisalatPhone">
+        <div class="card-glow"></div>
+        <div class="payment-logo et-cash">Etisalat Cash</div>
+        <h3>اتصالات كاش</h3>
+        <p class="card-instruction">يرجى التحويل على الرقم التالي:</p>
+        
+        <div class="phone-display-container">
+          <div class="phone-number">{{ payment().etisalatPhone }}</div>
+          <button class="btn-copy-phone" (click)="copyText(payment().etisalatPhone, 'etPhone')">
+            {{ copiedId === 'etPhone' ? '✅ تم النسخ' : '📋 نسخ الرقم' }}
+          </button>
+        </div>
+
+        <div class="ussd-generator-form">
+          <label>أدخل المبلغ المراد تحويله (جنيه مصري):</label>
+          <input type="number" [(ngModel)]="etisalatAmount" placeholder="مثال: 150" class="amount-input">
+          
+          <div class="generated-code-box" *ngIf="etisalatAmount && etisalatAmount > 0">
+            <span class="code-label">كود التحويل المباشر:</span>
+            <div class="code-value">{{ getEtisalatCode(payment().etisalatPhone) }}</div>
+            
+            <div class="action-buttons-grid">
+              <button class="btn-action-copy" (click)="copyText(getEtisalatCode(payment().etisalatPhone), 'etCode')">
+                {{ copiedId === 'etCode' ? '✅ تم نسخ الكود' : '📋 نسخ كود التحويل' }}
+              </button>
+              <a [href]="dialCode(getEtisalatCode(payment().etisalatPhone))" class="btn-action-dial">
+                📞 اتصال وتحويل
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Orange Cash -->
+      <div class="payment-card or-theme" *ngIf="payment().orangePhone">
+        <div class="card-glow"></div>
+        <div class="payment-logo or-cash">Orange Cash</div>
+        <h3>أورنج كاش</h3>
+        <p class="card-instruction">يرجى التحويل على الرقم التالي:</p>
+        
+        <div class="phone-display-container">
+          <div class="phone-number">{{ payment().orangePhone }}</div>
+          <button class="btn-copy-phone" (click)="copyText(payment().orangePhone, 'orPhone')">
+            {{ copiedId === 'orPhone' ? '✅ تم النسخ' : '📋 نسخ الرقم' }}
+          </button>
+        </div>
+
+        <div class="ussd-generator-form">
+          <label>أدخل المبلغ المراد تحويله (جنيه مصري):</label>
+          <input type="number" [(ngModel)]="orangeAmount" placeholder="مثال: 150" class="amount-input">
+          
+          <div class="generated-code-box" *ngIf="orangeAmount && orangeAmount > 0">
+            <span class="code-label">كود التحويل المباشر:</span>
+            <div class="code-value">{{ getOrangeCode(payment().orangePhone) }}</div>
+            
+            <div class="action-buttons-grid">
+              <button class="btn-action-copy" (click)="copyText(getOrangeCode(payment().orangePhone), 'orCode')">
+                {{ copiedId === 'orCode' ? '✅ تم نسخ الكود' : '📋 نسخ كود التحويل' }}
+              </button>
+              <a [href]="dialCode(getOrangeCode(payment().orangePhone))" class="btn-action-dial">
+                📞 اتصال وتحويل
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WE Pay -->
+      <div class="payment-card we-theme" *ngIf="payment().wePhone">
+        <div class="card-glow"></div>
+        <div class="payment-logo we-cash">WE Pay</div>
+        <h3>وي باي</h3>
+        <p class="card-instruction">يرجى التحويل على الرقم التالي:</p>
+        
+        <div class="phone-display-container">
+          <div class="phone-number">{{ payment().wePhone }}</div>
+          <button class="btn-copy-phone" (click)="copyText(payment().wePhone, 'wePhone')">
+            {{ copiedId === 'wePhone' ? '✅ تم النسخ' : '📋 نسخ الرقم' }}
+          </button>
+        </div>
+
+        <div class="ussd-generator-form">
+          <label>أدخل المبلغ المراد تحويله (جنيه مصري):</label>
+          <input type="number" [(ngModel)]="weAmount" placeholder="مثال: 150" class="amount-input">
+          
+          <div class="generated-code-box" *ngIf="weAmount && weAmount > 0">
+            <span class="code-label">كود التحويل المباشر:</span>
+            <div class="code-value">{{ getWeCode(payment().wePhone) }}</div>
+            
+            <div class="action-buttons-grid">
+              <button class="btn-action-copy" (click)="copyText(getWeCode(payment().wePhone), 'weCode')">
+                {{ copiedId === 'weCode' ? '✅ تم نسخ الكود' : '📋 نسخ كود التحويل' }}
+              </button>
+              <a [href]="dialCode(getWeCode(payment().wePhone))" class="btn-action-dial">
+                📞 اتصال وتحويل
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Instructions -->
+  <div class="alert-info-box">
+    <div class="alert-icon">💡</div>
+    <div class="alert-text">
+      <strong>تأكيد عملية الدفع:</strong> بعد إتمام عملية التحويل (سواء عبر الكاش أو إنستا باي)، يرجى أخذ لقطة شاشة (Screenshot) لعملية التحويل وإرسالها إلينا عبر الواتساب لتأكيد وتفعيل طلبك فوراً.
+    </div>
+  </div>
+</div>

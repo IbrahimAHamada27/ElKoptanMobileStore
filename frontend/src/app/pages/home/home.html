@@ -1,0 +1,42 @@
+<div class="home-container">
+  <div class="products-grid">
+    <div class="product-card" *ngFor="let product of products()">
+      <div class="product-image-container">
+        <a [routerLink]="['/product', product.id]" style="cursor: pointer;">
+          <img [src]="product.image" [alt]="product.name" class="product-image" />
+        </a>
+        <div class="cart-controls">
+          <button class="add-to-cart-btn" *ngIf="cartService.getQuantity(product.id) === 0" (click)="cartService.addToCart(product)">
+            <span>+</span>
+          </button>
+          <div class="quantity-control-pill" *ngIf="cartService.getQuantity(product.id) > 0">
+            <button class="qty-btn" (click)="cartService.decreaseQuantity(product.id)">-</button>
+            <span class="qty-display">{{ cartService.getQuantity(product.id) }}</span>
+            <button class="qty-btn" (click)="cartService.addToCart(product)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="product-details">
+        <h3 class="product-name"><a [routerLink]="['/product', product.id]">{{ product.name }}</a></h3>
+        <div class="price-and-badges">
+          <div class="product-price">
+            <span class="current-price">{{ product.discountPrice || product.price }} جنيه</span>
+            <span class="old-price" *ngIf="product.discountPrice">{{ product.price }} جنيه</span>
+          </div>
+          <!-- Badges -->
+          <div class="badges-container">
+            <div class="badge discount-badge" *ngIf="product.discountPrice">
+              -{{ getDiscountPercentage(product.price, product.discountPrice) }}%
+            </div>
+            <div class="badge best-seller-badge" *ngIf="product.isBestSeller">
+              الأكثر مبيعاً
+            </div>
+            <div class="badge new-badge" *ngIf="product.isNew">
+              جديد
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

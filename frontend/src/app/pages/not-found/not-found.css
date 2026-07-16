@@ -1,0 +1,27 @@
+.not-found-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: calc(100vh - var(--header-height) - 100px);
+  padding: 20px;
+}
+
+.not-found-container h1 {
+  font-size: 6rem;
+  color: var(--secondary-color);
+  margin-bottom: 10px;
+}
+
+.not-found-container h2 {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.not-found-container p {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}

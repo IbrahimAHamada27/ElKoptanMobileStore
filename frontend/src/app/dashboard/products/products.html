@@ -1,0 +1,50 @@
+<div class="admin-page-header">
+  <h2>{{ pageTitle() }}</h2>
+  <a [routerLink]="['/admin/add-product']" [queryParams]="{category: category()}" class="btn-primary" style="text-decoration:none; display:inline-block; padding:10px 15px;">إضافة منتج جديد +</a>
+</div>
+
+<div class="products-table-container" style="margin-bottom: 80px;">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>ترتيب</th>
+        <th>صورة</th>
+        <th>الاسم</th>
+        <th>القسم</th>
+        <th>السعر</th>
+        <th>السعر بعد الخصم</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of localProducts(); let i = index">
+        <td>
+          <div class="order-controls">
+            <button class="btn-icon" (click)="moveUp(i)" [disabled]="i === 0">⬆️</button>
+            <button class="btn-icon" (click)="moveDown(i)" [disabled]="i === localProducts().length - 1">⬇️</button>
+          </div>
+        </td>
+        <td><img [src]="product.image" class="table-img" alt="Product Image"></td>
+        <td>{{ product.name }}</td>
+        <td>
+          <span class="badge" [ngClass]="{'bg-blue': product.category === 'phone', 'bg-green': product.category === 'accessory', 'bg-red': product.category === 'offer'}">
+            {{ product.category === 'phone' ? 'هواتف' : (product.category === 'accessory' ? 'اكسسوارات' : 'عروض') }}
+          </span>
+        </td>
+        <td>{{ product.price }} جنيه</td>
+        <td>{{ product.discountPrice ? product.discountPrice + ' جنيه' : '-' }}</td>
+        <td>
+          <a [routerLink]="['/admin/edit-product', product.id]" class="btn-action edit-btn" style="text-decoration:none;">تعديل</a>
+          <button class="btn-action delete-btn" (click)="deleteProduct(product.id || '')">حذف</button>
+        </td>
+      </tr>
+      <tr *ngIf="localProducts().length === 0">
+        <td colspan="7" class="text-center">لا توجد منتجات حالياً.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="save-bar">
+  <button class="btn-primary save-btn" [class.disabled-btn]="!hasUnsavedChanges" [disabled]="!hasUnsavedChanges" (click)="saveOrder()">حفظ التعديلات</button>
+</div>

@@ -1,0 +1,38 @@
+<div class="maintenance-container">
+  <div class="hero-section">
+    <h1>مركز صيانة القبطان</h1>
+    <p>نقدم أفضل خدمات الصيانة لجميع أنواع الهواتف والأجهزة الذكية بأيدي مهندسين متخصصين مع ضمان على جميع أعمال الصيانة.</p>
+  </div>
+  
+  <div class="services-grid">
+    <div class="service-card" *ngFor="let s of maintenance().services">
+      <div class="icon">{{ s.icon }}</div>
+      <h3>{{ s.title }}</h3>
+      <p>{{ s.desc }}</p>
+    </div>
+    <div *ngIf="maintenance().services?.length === 0" style="grid-column: 1/-1; text-align:center;">
+      <p>جاري تحديث خدمات الصيانة...</p>
+    </div>
+  </div>
+  
+  <div class="contact-info">
+    <h2>للحجز والاستعلام</h2>
+    <div class="numbers">
+      <div class="number-card" *ngFor="let num of maintenance().numbers">
+        <h4>{{ num.title }}</h4>
+        <p>{{ num.phone }}</p>
+      </div>
+      <div *ngIf="maintenance().numbers?.length === 0">
+        <p>جاري إضافة أرقام التواصل...</p>
+      </div>
+    </div>
+    
+    <div class="locations">
+      <h3>فروع الصيانة</h3>
+      <ul>
+        <li *ngFor="let loc of maintenance().locations">{{ loc }}</li>
+      </ul>
+      <p *ngIf="maintenance().locations?.length === 0">جاري تحديث الفروع...</p>
+    </div>
+  </div>
+</div>

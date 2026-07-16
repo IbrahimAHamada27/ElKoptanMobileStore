@@ -1,0 +1,64 @@
+<div class="admin-page-header">
+  <h2>{{ isEditMode ? 'تعديل المنتج' : 'إضافة منتج جديد' }}</h2>
+  <button (click)="goBack()" class="btn-secondary" style="border:none; cursor:pointer;">العودة</button>
+</div>
+
+<div class="form-container">
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm">
+    <div class="form-group">
+      <label>اسم المنتج *</label>
+      <input type="text" [(ngModel)]="productData.name" name="name" required class="form-control">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group half">
+        <label>السعر الأساسي *</label>
+        <input type="number" [(ngModel)]="productData.price" name="price" required class="form-control">
+      </div>
+      <div class="form-group half">
+        <label>السعر بعد الخصم (اختياري)</label>
+        <input type="number" [(ngModel)]="productData.discountPrice" name="discountPrice" class="form-control">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group half">
+        <label>القسم *</label>
+        <select [(ngModel)]="productData.category" name="category" required class="form-control">
+          <option value="phone">هواتف</option>
+          <option value="accessory">إكسسوارات</option>
+          <option value="offer">عروض خاصة</option>
+        </select>
+      </div>
+      <div class="form-group half">
+        <label>الكمية المتاحة (Stock) *</label>
+        <input type="number" [(ngModel)]="productData.stock" name="stock" required class="form-control">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>وصف المنتج *</label>
+      <textarea [(ngModel)]="productData.desc" name="desc" rows="4" required class="form-control"></textarea>
+    </div>
+
+    <div class="form-row checkboxes">
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="productData.isNewProduct" name="isNewProduct">
+        علامة "جديد"
+      </label>
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="productData.isBestSeller" name="isBestSeller">
+        علامة "الأكثر مبيعاً"
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>صورة المنتج {{ isEditMode ? '(اختياري إذا لم ترغب بتغييرها)' : '*' }}</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" [required]="!isEditMode">
+    </div>
+
+    <button type="submit" class="btn-primary submit-btn" [disabled]="!productForm.form.valid || (!isEditMode && !selectedFile)">
+      {{ isEditMode ? 'تحديث البيانات' : 'حفظ المنتج' }}
+    </button>
+  </form>
+</div>

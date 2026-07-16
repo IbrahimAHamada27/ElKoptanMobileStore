@@ -1,0 +1,28 @@
+<div class="admin-container">
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <h2>لوحة الإدارة</h2>
+    </div>
+    <ul class="admin-menu">
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">📊 الإحصائيات</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/settings/featured" routerLinkActive="active">🏠 الرئيسية والعروض</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/products/phone" routerLinkActive="active">📱 إدارة الهواتف</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/products/accessory" routerLinkActive="active">🎧 إدارة الإكسسوارات</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/settings/contact" routerLinkActive="active">📞 بيانات التواصل</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/settings/payment" routerLinkActive="active">💳 طرق الدفع</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/settings/maintenance" routerLinkActive="active">🛠️ إدارة الصيانة</a></li>
+      <li *ngIf="role !== 'superadmin'"><a routerLink="/admin/settings/faq" routerLinkActive="active">❓ الأسئلة الشائعة</a></li>
+      <li *ngIf="role === 'superadmin'"><a routerLink="/admin/admins" routerLinkActive="active">👥 إدارة المدراء</a></li>
+      <li style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;"><a (click)="logout()" style="cursor: pointer; color: #f87171;">🚪 تسجيل الخروج</a></li>
+    </ul>
+  </aside>
+
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <h3>مرحباً بك يا قبطان!</h3>
+    </header>
+    <div class="admin-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

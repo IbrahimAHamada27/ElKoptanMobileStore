@@ -1,0 +1,11 @@
+<app-header></app-header>
+<main>
+  <router-outlet></router-outlet>
+</main>
+<app-footer></app-footer>
+
+<!-- Floating Cart Button -->
+<a routerLink="/cart" class="floating-cart-btn">
+  <div class="cart-icon">🛒</div>
+  <span class="cart-badge">{{ cartService.totalItems() }}</span>
+</a>

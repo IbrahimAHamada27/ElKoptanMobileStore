@@ -1,0 +1,82 @@
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f9;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: var(--primary-color);
+  color: var(--light-text);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h2 {
+  color: var(--secondary-color);
+  margin: 0;
+  font-family: 'Changa', sans-serif;
+  font-size: 2rem;
+}
+
+.admin-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.admin-menu li {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-menu a {
+  display: block;
+  padding: 15px 20px;
+  color: var(--light-text);
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.admin-menu a:hover, .admin-menu a.active {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border-right: 4px solid #fff;
+}
+
+.admin-menu a.back-to-store {
+  color: #aaa;
+  margin-top: 20px;
+}
+
+.admin-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-topbar {
+  background-color: #fff;
+  height: 60px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.admin-topbar h3 {
+  margin: 0;
+  color: #333;
+}
+
+.admin-content {
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+}

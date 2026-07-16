@@ -1,0 +1,40 @@
+<div class="product-details-container" *ngIf="product() as p; else notFound">
+  <div class="product-images">
+    <div class="main-image-container">
+      <img [src]="p.image" [alt]="p.name" class="main-image" style="width: 100%; max-width: 400px; border-radius: 12px; object-fit: contain;" />
+    </div>
+  </div>
+  
+  <div class="product-info">
+    <h1 class="product-title">{{ p.name }}</h1>
+    <div class="product-price">
+      <span class="current-price">{{ p.discountPrice || p.price }} جنيه</span>
+      <span class="old-price" *ngIf="p.discountPrice">{{ p.price }} جنيه</span>
+    </div>
+    
+    <div class="product-description" *ngIf="p.desc">
+      <h3>الوصف:</h3>
+      <p style="white-space: pre-wrap; line-height: 1.6; color: var(--text-light);">{{ p.desc }}</p>
+    </div>
+    
+    <div class="purchase-actions">
+      <ng-container *ngIf="cartService.getQuantity(p.id) === 0; else inCart">
+        <button class="btn-primary add-to-cart-btn-large" (click)="cartService.addToCart(p)">أضف إلى السلة</button>
+      </ng-container>
+      <ng-template #inCart>
+        <div class="quantity-control-large">
+          <button class="qty-btn" (click)="cartService.decreaseQuantity(p.id)">-</button>
+          <span class="qty-display">{{ cartService.getQuantity(p.id) }}</span>
+          <button class="qty-btn" (click)="cartService.addToCart(p)">+</button>
+        </div>
+        <button class="btn-secondary add-to-cart-btn-large" routerLink="/cart">الذهاب للسلة</button>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<ng-template #notFound>
+  <div class="product-details-container text-center">
+    <h2>جاري تحميل تفاصيل المنتج...</h2>
+  </div>
+</ng-template>
