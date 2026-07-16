@@ -26,9 +26,6 @@ export class Header implements OnInit {
   }
 
   ngOnInit() {
-    if (this.isBrowser) {
-      this.hasSeenHero = sessionStorage.getItem('hasSeenHero') === 'true';
-    }
     this.isHomePage = this.router.url === '/' || this.router.url === '/home';
     this.checkScroll();
   }
@@ -44,7 +41,6 @@ export class Header implements OnInit {
         this.isScrolled = window.scrollY > 50;
         if (this.isScrolled) {
           this.hasSeenHero = true;
-          sessionStorage.setItem('hasSeenHero', 'true');
         }
       } else {
         this.isScrolled = false;
