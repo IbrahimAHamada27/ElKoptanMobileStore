@@ -27,7 +27,7 @@ interface AdminUser {
       <span class="notice-icon">🔒</span>
       <div class="notice-content">
         <h4>تنبيه الأمان العالي</h4>
-        <p>جميع بيانات المدراء (الاسم واسم المستخدم وكلمة المرور) يتم تشفيرها باستخدام خوارزميات الهاش أحادية الاتجاه (SHA-256 و Bcrypt) لحماية المتجر. لا يتم حفظ البيانات الحقيقية بأي شكل مقروء في قاعدة البيانات.</p>
+        <p>بيانات المدراء (اسم المستخدم وكلمة المرور) يتم تشفيرها باستخدام خوارزميات الهاش أحادية الاتجاه (SHA-256 و Bcrypt) لحماية المتجر. لا يتم حفظ البيانات الحقيقية بأي شكل مقروء في قاعدة البيانات.</p>
       </div>
     </div>
 
@@ -35,7 +35,7 @@ interface AdminUser {
       <table class="admin-table">
         <thead>
           <tr>
-            <th>الاسم (مُهيش)</th>
+            <th>الاسم</th>
             <th>اسم المستخدم (مُهيش)</th>
             <th>الصلاحيات</th>
             <th>إجراءات</th>
@@ -43,7 +43,7 @@ interface AdminUser {
         </thead>
         <tbody>
           <tr *ngFor="let admin of admins(); let i = index">
-            <td class="hash-text" [title]="admin.name">{{ admin.name.substring(0, 24) }}...</td>
+            <td [title]="admin.name">{{ admin.name }}</td>
             <td class="hash-text" [title]="admin.email">{{ admin.email.substring(0, 24) }}...</td>
             <td>
               <span class="badge bg-green">{{ admin.role === 'admin' ? 'مدير' : admin.role }}</span>

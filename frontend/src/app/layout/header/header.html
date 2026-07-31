@@ -1,6 +1,6 @@
 <header class="main-header" [class.hero-mode]="isHomePage && !isScrolled">
   <div class="header-container">
-    <div class="menu-toggle" (click)="toggleMenu()" *ngIf="isScrolled || !isHomePage">
+    <div class="menu-toggle" [class.hide-toggle]="isMenuOpen" (click)="toggleMenu()" *ngIf="isScrolled || !isHomePage">
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>

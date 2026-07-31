@@ -40,9 +40,6 @@ userSchma.pre('save', async function() {
     if (this.isModified('email')) {
         this.email = crypto.createHash('sha256').update(this.email.trim().toLowerCase()).digest('hex');
     }
-    if (this.isModified('name')) {
-        this.name = crypto.createHash('sha256').update(this.name.trim()).digest('hex');
-    }
 });
 
 userSchma.methods.correctPassword = async function(inputPassword){

@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { Meta } from '@angular/platform-browser';
+import { MetaPixelService } from './core/services/meta-pixel.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,18 @@ export class App implements AfterViewInit, OnInit {
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private meta = inject(Meta);
+  private metaPixelService = inject(MetaPixelService);
   protected readonly title = signal('Al-Qubtan');
 
   ngOnInit() {
+    this.metaPixelService.initialize();
+
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.metaPixelService.pageView();
+    });
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.activatedRoute),
