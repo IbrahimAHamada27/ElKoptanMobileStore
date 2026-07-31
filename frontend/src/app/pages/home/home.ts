@@ -23,8 +23,12 @@ export class Home implements OnInit {
   products = computed(() => {
     const data = this.settingService.featuredProductsSignal();
     const ids = data?.home || [];
-    if (!ids || !ids.length) return [];
-    return ids.map(id => this.productService.getProductById(id)).filter(p => !!p);
+    const allProducts = this.productService.products();
+    if (!ids || !ids.length) {
+      return allProducts;
+    }
+    const featured = ids.map(id => this.productService.getProductById(id)).filter(p => !!p);
+    return featured.length > 0 ? featured : allProducts;
   });
 
   ngOnInit() {

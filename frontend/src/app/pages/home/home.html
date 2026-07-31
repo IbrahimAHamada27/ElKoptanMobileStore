@@ -3,7 +3,7 @@
     <div class="product-card" *ngFor="let product of products()">
       <div class="product-image-container">
         <a [routerLink]="['/product', product.id]" style="cursor: pointer;">
-          <img [src]="product.image" [alt]="product.name" class="product-image" />
+          <img [src]="product.image" [alt]="product.name" class="product-image" loading="eager" fetchpriority="high" />
         </a>
         <div class="cart-controls">
           <button class="add-to-cart-btn" *ngIf="cartService.getQuantity(product.id) === 0" (click)="cartService.addToCart(product)">

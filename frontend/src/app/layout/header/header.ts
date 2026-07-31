@@ -18,6 +18,12 @@ export class Header implements OnInit, OnDestroy {
 
   constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+    if (this.isBrowser) {
+      const path = window.location.pathname;
+      this.isHomePage = path === '/' || path === '/home' || path === '';
+    } else {
+      this.isHomePage = this.router.url === '/' || this.router.url === '/home';
+    }
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isHomePage = event.url === '/' || event.url === '/home';
@@ -27,7 +33,6 @@ export class Header implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.isHomePage = this.router.url === '/' || this.router.url === '/home';
     this.checkScroll();
   }
 
@@ -37,7 +42,7 @@ export class Header implements OnInit, OnDestroy {
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
-    if (this.isHomePage && !this.hasSeenHero && this.isBrowser && window.scrollY > 10) {
+    if (this.isHomePage && !this.hasSeenHero && this.isBrowser && window.scrollY > 5) {
       this.dismissHero();
     }
   }
@@ -60,18 +65,22 @@ export class Header implements OnInit, OnDestroy {
   onTouchMove(event: TouchEvent) {
     if (this.isHomePage && !this.hasSeenHero) {
       const touchEndY = event.touches[0].clientY;
-      if (this.touchStartY > touchEndY + 30) {
+      if (this.touchStartY > touchEndY + 20) {
         this.dismissHero();
       }
     }
   }
 
   dismissHero() {
+    if (this.hasSeenHero) return;
     this.hasSeenHero = true;
     this.isScrolled = true;
     this.enableScroll();
     if (this.isBrowser) {
       window.scrollTo(0, 0);
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+      setTimeout(() => window.scrollTo(0, 0), 20);
+      setTimeout(() => window.scrollTo(0, 0), 100);
     }
   }
 

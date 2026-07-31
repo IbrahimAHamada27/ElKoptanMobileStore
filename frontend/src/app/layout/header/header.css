@@ -8,7 +8,7 @@
   left: 0;
   z-index: 1000;
   box-shadow: var(--shadow);
-  transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: height 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
 }
 
@@ -16,6 +16,7 @@
   height: 100vh;
   background-color: var(--primary-color);
   background-image: radial-gradient(circle at center, rgba(230, 193, 103, 0.1) 0%, transparent 60%);
+  transition: none !important;
 }
 
 .header-container {
