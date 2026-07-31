@@ -77,4 +77,23 @@
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.2);
   margin-top: 30px;
+  direction: ltr;
+}
+
+.footer-bottom p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--light-text);
+}
+
+.developer-link {
+  color: var(--secondary-color);
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.developer-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
 }
