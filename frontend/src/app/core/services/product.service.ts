@@ -32,7 +32,17 @@ export class ProductService {
     this.loadProducts();
   }
 
+  private loadPromise: Promise<void> | null = null;
+
   async loadProducts() {
+    if (this.loadPromise) {
+      return this.loadPromise;
+    }
+    this.loadPromise = this._loadProductsInternal();
+    return this.loadPromise;
+  }
+
+  private async _loadProductsInternal() {
     try {
       const response: any = await firstValueFrom(this.http.get(this.apiUrl));
       if (response && response.data) {

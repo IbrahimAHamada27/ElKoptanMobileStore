@@ -1,5 +1,5 @@
 import { Component, signal, inject, AfterViewInit, PLATFORM_ID, OnInit } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd, ActivatedRoute, NavigationCancel, NavigationError } from '@angular/router';
 import { ToastService } from './core/services/toast.service';
 import { CommonModule } from '@angular/common';
 import { isPlatformBrowser } from '@angular/common';
@@ -26,6 +26,19 @@ export class App implements AfterViewInit, OnInit {
     this.metaPixelService.initialize();
 
     this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError)
+    ).subscribe(() => {
+      if (isPlatformBrowser(this.platformId)) {
+        const loader = document.getElementById('app-initial-loader');
+        if (loader) {
+          loader.style.transition = 'opacity 0.3s ease';
+          loader.style.opacity = '0';
+          setTimeout(() => loader.remove(), 300);
+        }
+      }
+    });
+
+    this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.metaPixelService.pageView();
@@ -50,15 +63,5 @@ export class App implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    // نمسح شاشة التحميل فور ما Angular يبدأ يشتغل
-    if (isPlatformBrowser(this.platformId)) {
-      const loader = document.getElementById('app-initial-loader');
-      if (loader) {
-        // fade out سلس
-        loader.style.transition = 'opacity 0.3s ease';
-        loader.style.opacity = '0';
-        setTimeout(() => loader.remove(), 300);
-      }
-    }
   }
 }
