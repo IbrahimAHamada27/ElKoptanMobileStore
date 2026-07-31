@@ -109,7 +109,7 @@ export class ProductForm implements OnInit {
       }
 
       // Reload products
-      await this.productService.loadProducts();
+      await this.productService.loadProducts(true);
       this.goBack();
 
     } catch (error) {

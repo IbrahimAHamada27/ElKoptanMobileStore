@@ -34,8 +34,8 @@ export class ProductService {
 
   private loadPromise: Promise<void> | null = null;
 
-  async loadProducts() {
-    if (this.loadPromise) {
+  async loadProducts(force: boolean = false) {
+    if (this.loadPromise && !force) {
       return this.loadPromise;
     }
     this.loadPromise = this._loadProductsInternal();
