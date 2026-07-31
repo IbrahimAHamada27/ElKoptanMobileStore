@@ -2,5 +2,5 @@ export const environment = {
   production: false,
   apiUrl: 'http://127.0.0.1:3000/api/v1',
   baseUrl: 'http://127.0.0.1:3000',
-  pixelId: 'YOUR_PIXEL_ID'
+  pixelId: '4490522654599921'
 };
