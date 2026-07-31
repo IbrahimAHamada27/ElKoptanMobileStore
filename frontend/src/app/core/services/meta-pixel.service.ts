@@ -3,16 +3,18 @@ import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../../environments/environment';
 
 // Type definitions for Meta Pixel global variables
+interface MetaPixelFunction {
+  (...args: unknown[]): void;
+  callMethod?: (...args: unknown[]) => void;
+  queue: unknown[][];
+  push: unknown;
+  loaded: boolean;
+  version: string;
+}
+
 interface MetaWindow extends Window {
-  fbq: {
-    (...args: unknown[]): void;
-    callMethod?: (...args: unknown[]) => void;
-    queue: unknown[];
-    push: unknown;
-    loaded: boolean;
-    version: string;
-  };
-  _fbq: unknown;
+  fbq?: MetaPixelFunction;
+  _fbq?: MetaPixelFunction;
 }
 
 declare let window: MetaWindow;
@@ -33,7 +35,7 @@ export interface MetaPurchaseData extends CurrencyData, ContentData {
   num_items?: number;
 }
 
-export interface MetaAddToCartData extends CurrencyData, ContentData {}
+export interface MetaAddToCartData extends CurrencyData, ContentData { }
 
 export interface MetaInitiateCheckoutData extends CurrencyData, ContentData {
   num_items?: number;
@@ -43,10 +45,10 @@ export interface MetaSearchData {
   search_string: string;
 }
 
-export type MetaEventData = 
-  | MetaPurchaseData 
-  | MetaAddToCartData 
-  | MetaInitiateCheckoutData 
+export type MetaEventData =
+  | MetaPurchaseData
+  | MetaAddToCartData
+  | MetaInitiateCheckoutData
   | MetaSearchData
   | (ContentData & Partial<CurrencyData>)
   | Record<string, string | number | boolean | string[]>;
@@ -79,21 +81,23 @@ export class MetaPixelService {
     const e = 'script';
     const v = 'https://connect.facebook.net/en_US/fbevents.js';
 
-    if (f.fbq) return;
+    if ('fbq' in f && f.fbq) return;
 
-    const n = f.fbq = function(...args: unknown[]): void {
-      if (n.callMethod) {
-        n.callMethod(...args);
+    const fbqFunc = function (...args: unknown[]): void {
+      if (fbqFunc.callMethod) {
+        fbqFunc.callMethod(...args);
       } else {
-        n.queue.push(args);
+        fbqFunc.queue.push(args);
       }
-    };
+    } as MetaPixelFunction;
 
-    if (!f._fbq) f._fbq = n;
-    n.push = n;
-    n.loaded = true;
-    n.version = '2.0';
-    n.queue = [];
+    fbqFunc.push = fbqFunc;
+    fbqFunc.loaded = true;
+    fbqFunc.version = '2.0';
+    fbqFunc.queue = [];
+
+    f.fbq = fbqFunc;
+    if (!f._fbq) f._fbq = fbqFunc;
 
     const t = b.createElement(e);
     t.async = true;
@@ -106,7 +110,7 @@ export class MetaPixelService {
       b.head.appendChild(t);
     }
 
-    window.fbq('init', pixelId);
+    window.fbq?.('init', pixelId);
     this.isInitialized = true;
   }
 
@@ -115,9 +119,9 @@ export class MetaPixelService {
       return;
     }
     if (data) {
-      window.fbq('track', eventName, data);
+      window.fbq?.('track', eventName, data);
     } else {
-      window.fbq('track', eventName);
+      window.fbq?.('track', eventName);
     }
   }
 
