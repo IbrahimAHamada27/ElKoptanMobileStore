@@ -102,14 +102,18 @@ export class DashboardContact {
 
   contactData: any = {
     branches: [
-      { name: 'الفرع الرئيسي', address: 'الإسكندرية، مصر', salesPhone: '01012345678', maintenancePhone: '01112345678' }
+      { name: 'فرع محور السادات - سنتر جواهر', address: 'مدينة العبور - الحي الأول - محور السادات بجوار فرع فودافون بداخل سنتر جواهر - الدور الأول علوي', salesPhone: '01034777762', maintenancePhone: '01031777762' },
+      { name: 'فرع سنتر الشروق (Number 1)', address: 'مدينة العبور - الحي الأول - سنتر الشروق - بجوار كشري الخديوي', salesPhone: '01034777762', maintenancePhone: '01031777762' },
+      { name: 'المركز الرئيسي للصيانة المعتمدة', address: 'مدينة العبور - الحي الأول - المركز العالمي للتطوير - بجوار كشري الخديوي', salesPhone: '01034777762', maintenancePhone: '01031777762' },
+      { name: 'فرع سنتر اللؤلؤة (محل 14)', address: 'مدينة العبور - الحي الأول - سنتر اللؤلؤة - محل 14 - بدروم خلفي - بجوار محل دلعين', salesPhone: '01034777762', maintenancePhone: '01031777762' },
+      { name: 'فرع سوق العبور بالجملة', address: 'مدينة العبور - سوق العبور للجملة - مبنى خدمات 3 بجوار مسجد الرحمن الرحيم محل 57', salesPhone: '01034777762', maintenancePhone: '01031777762' }
     ],
-    email: 'info@alqubtan.com',
-    facebook: '',
-    instagram: '',
-    whatsapp: '201012345678',
-    tiktok: '',
-    messenger: ''
+    email: 'info@elkoptan-mobile.com',
+    facebook: 'https://www.facebook.com/share/1XKmJ1R7vV/?mibextid=wwXIfr',
+    instagram: 'https://www.instagram.com/el_koptan_store1?igsh=cWJhMTMzbW42emJm&utm_source=qr',
+    whatsapp: '201034777762',
+    tiktok: 'https://www.tiktok.com/@el_koptan_stor?_r=1&_t=ZS-97TeCUoF0g1',
+    messenger: 'https://www.facebook.com/share/1XKmJ1R7vV/?mibextid=wwXIfr'
   };
 
   originalDataString: string = '';
