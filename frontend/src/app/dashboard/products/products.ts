@@ -96,12 +96,17 @@ export class DashboardProducts implements OnInit {
     this.hasUnsavedChanges = JSON.stringify(this.localProducts()) !== this.originalProductsString;
   }
 
-  deleteProduct(id: string) {
+  async deleteProduct(id: string) {
     if(confirm('هل أنت متأكد من حذف هذا المنتج؟')) {
-      this.productService.deleteProduct(id);
-      // Also update local list
-      this.localProducts.update(list => list.filter(p => p.id !== id));
-      this.checkForChanges();
+      try {
+        await this.productService.deleteProduct(id);
+        // Also update local list
+        this.localProducts.update(list => list.filter(p => p.id !== id));
+        this.checkForChanges();
+        this.toastService.show('تم حذف المنتج بنجاح', 'success');
+      } catch (err) {
+        this.toastService.show('حدث خطأ أثناء حذف المنتج', 'error');
+      }
     }
   }
 

@@ -1,4 +1,5 @@
 const product = require('../models/product.model');
+const { Setting } = require('../models/setting.model');
 
 exports.getProducts = async (req, res) => {
     try {
@@ -11,14 +12,25 @@ exports.getProducts = async (req, res) => {
 
 exports.addProduct = async (req, res) => {
     try {
-        const {name, price, desc, stock, slug} = req.body;
+        const {name, price, discountPrice, category, isNewProduct, isBestSeller, desc, stock, slug} = req.body;
         
         if (!req.file) return res.status(400).json({error: 'Image is required'});
         
         const base64Data = req.file.buffer.toString('base64');
         const imagURL = `data:${req.file.mimetype};base64,${base64Data}`;
 
-        const myProduct = await product.create({name, price, desc, stock, imagURL, slug});
+        const myProduct = await product.create({
+            name, 
+            price: Number(price), 
+            discountPrice: discountPrice ? Number(discountPrice) : undefined,
+            category: category || 'phone',
+            isNewProduct: isNewProduct === 'true' || isNewProduct === true,
+            isBestSeller: isBestSeller === 'true' || isBestSeller === true,
+            desc, 
+            stock: Number(stock), 
+            imagURL, 
+            slug
+        });
         res.status(201).json({massage:'product added' , data:myProduct});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -41,11 +53,23 @@ exports.getProductsBySlug = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const id = req.params.id;
-        const updateData = req.body;
+        const updateData = { ...req.body };
         if(req.file) {
             const base64Data = req.file.buffer.toString('base64');
             updateData.imagURL = `data:${req.file.mimetype};base64,${base64Data}`;
         }
+        if (updateData.price) updateData.price = Number(updateData.price);
+        if (updateData.discountPrice !== undefined) {
+            updateData.discountPrice = updateData.discountPrice ? Number(updateData.discountPrice) : null;
+        }
+        if (updateData.stock) updateData.stock = Number(updateData.stock);
+        if (updateData.isNewProduct !== undefined) {
+            updateData.isNewProduct = updateData.isNewProduct === 'true' || updateData.isNewProduct === true;
+        }
+        if (updateData.isBestSeller !== undefined) {
+            updateData.isBestSeller = updateData.isBestSeller === 'true' || updateData.isBestSeller === true;
+        }
+
         const updated = await product.findByIdAndUpdate(id, updateData, { new: true });
         if(!updated) return res.status(404).json({error:'product not found'});
         res.status(200).json({massage : 'product updated', data: updated});
@@ -59,6 +83,18 @@ exports.deleteProduct = async (req, res) => {
         const id = req.params.id;
         const deleted = await product.findByIdAndDelete(id);
         if(!deleted) return res.status(404).json({error:'product not found'});
+
+        // Also clean up from Setting (featured_products)
+        await Setting.updateOne(
+          { key: 'featured_products' },
+          { 
+            $pull: { 
+              'value.home': id, 
+              'value.offers': id 
+            } 
+          }
+        );
+
         res.status(200).json({massage : 'product deleted'});
     } catch (error) {
         res.status(500).json({ error: error.message });

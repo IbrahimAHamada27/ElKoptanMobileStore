@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject, PLATFORM_ID, Inject } from '@angu
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { SettingService } from './setting.service';
 
 export interface Product {
   _id?: string;
@@ -24,6 +25,7 @@ export interface Product {
 })
 export class ProductService {
   private http = inject(HttpClient);
+  private settingService = inject(SettingService);
   private apiUrl = `${environment.apiUrl}/product`;
 
   private productsSignal = signal<Product[]>([]);
@@ -105,8 +107,13 @@ export class ProductService {
     try {
       await firstValueFrom(this.http.delete(`${this.apiUrl}/${id}`));
       this.productsSignal.update(products => products.filter(p => p.id !== id));
+      this.settingService.featuredProductsSignal.update(featured => ({
+        home: (featured?.home || []).filter(itemId => itemId !== id),
+        offers: (featured?.offers || []).filter(itemId => itemId !== id)
+      }));
     } catch (error) {
       console.error('Failed to delete product', error);
+      throw error;
     }
   }
 }

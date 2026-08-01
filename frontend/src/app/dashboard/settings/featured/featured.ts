@@ -138,10 +138,15 @@ export class DashboardFeatured {
   constructor() {
     effect(() => {
       const data = this.settingService.featuredProductsSignal();
+      const products = this.allProducts();
       if (data && (data.home || data.offers)) {
+        // Filter out IDs of deleted products if products list is loaded
+        const validHome = (data.home || []).filter(id => !products.length || products.some(p => p.id === id));
+        const validOffers = (data.offers || []).filter(id => !products.length || products.some(p => p.id === id));
+
         this.featuredData = { 
-          home: [...(data.home || [])], 
-          offers: [...(data.offers || [])] 
+          home: [...validHome], 
+          offers: [...validOffers] 
         };
         // Set original data string on initial load
         if (!this.originalDataString) {
@@ -161,12 +166,15 @@ export class DashboardFeatured {
 
   getProductsByCategory(category: string | null): Product[] {
     if (!category) return [];
+    if (category === 'offer') {
+      return this.allProducts().filter(p => (p.discountPrice && p.discountPrice < p.price) || p.category === 'offer');
+    }
     return this.allProducts().filter(p => p.category === category);
   }
 
   getProductName(id: string): string {
     const p = this.productService.getProductById(id);
-    return p ? p.name : 'منتج غير معروف';
+    return p ? `${p.name} - ${p.price} جنيه` : 'منتج غير معروف';
   }
 
   checkForChanges() {
