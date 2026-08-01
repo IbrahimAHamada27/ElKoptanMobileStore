@@ -1,9 +1,9 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
-import { Title, Meta } from '@angular/platform-browser';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-accessories',
@@ -14,21 +14,20 @@ import { Title, Meta } from '@angular/platform-browser';
 export class Accessories implements OnInit {
   productService = inject(ProductService);
   cartService = inject(CartService);
-  titleService = inject(Title);
-  metaService = inject(Meta);
+  seoService = inject(SeoService);
 
   accessories = this.productService.getProductsByCategory('accessory');
 
   ngOnInit() {
-    this.titleService.setTitle('إكسسوارات الهواتف الأصلية | القبطان موبايل ستور');
-    this.metaService.updateTag({ 
-      name: 'description', 
-      content: 'اكتشف أفضل إكسسوارات الهواتف، السماعات، الشواحن، الكابلات، والجرابات الأصلية بأسعار رائعة في القبطان موبايل ستور.' 
-    });
-    this.metaService.updateTag({ property: 'og:title', content: 'إكسسوارات الهواتف الأصلية | القبطان موبايل ستور' });
-    this.metaService.updateTag({ 
-      property: 'og:description', 
-      content: 'اكتشف أفضل إكسسوارات الهواتف، السماعات، الشواحن، الكابلات، والجرابات الأصلية بأسعار رائعة في القبطان موبايل ستور.' 
+    this.seoService.setPageSeo({
+      title: 'إكسسوارات موبايلات وجرابات وشواحن في العبور | القبطان ستور',
+      description: 'أفضل محل اكسسوارات موبايلات في العبور الحي الأول. جرابات ايفون وسامسونج وشاومي، اسكرينات حماية، شواحن سريعة، وسماعات أصلية من القبطان موبايل ستور.',
+      keywords: 'اكسسوارات موبايلات في العبور, اكسسوارات موبيلات في العبور, جرابات موبايل في العبور, اسكرينة موبايل في العبور, شواحن موبايل في العبور, سماعات موبايل في العبور, أفضل محل اكسسوارات موبايلات في العبور',
+      url: '/accessories',
+      jsonLd: this.seoService.getBreadcrumbSchema([
+        { name: 'الرئيسية', url: '/' },
+        { name: 'الإكسسوارات الأصلية', url: '/accessories' }
+      ])
     });
   }
 

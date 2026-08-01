@@ -1,12 +1,16 @@
 <div class="home-container">
+  <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+    القبطان موبايل ستور - أفضل محل موبايلات واكسسوارات في مدينة العبور الحي الأول
+  </h1>
+
   <div class="products-grid">
-    <div class="product-card" *ngFor="let product of products()">
+    <div class="product-card" *ngFor="let product of products(); let i = index">
       <div class="product-image-container">
         <a [routerLink]="['/product', product.id]" style="cursor: pointer;">
-          <img [src]="product.image" [alt]="product.name" class="product-image" loading="eager" fetchpriority="high" />
+          <img [src]="product.image" [alt]="product.name + ' - القبطان موبايل ستور مدينة العبور'" class="product-image" [attr.loading]="i < 4 ? 'eager' : 'lazy'" [attr.fetchpriority]="i < 2 ? 'high' : 'auto'" />
         </a>
         <div class="cart-controls">
-          <button class="add-to-cart-btn" *ngIf="cartService.getQuantity(product.id) === 0" (click)="cartService.addToCart(product)">
+          <button class="add-to-cart-btn" *ngIf="cartService.getQuantity(product.id) === 0" (click)="cartService.addToCart(product)" [attr.aria-label]="'إضافة ' + product.name + ' إلى السلة'">
             <span>+</span>
           </button>
           <div class="quantity-control-pill" *ngIf="cartService.getQuantity(product.id) > 0">
@@ -17,7 +21,7 @@
         </div>
       </div>
       <div class="product-details">
-        <h3 class="product-name"><a [routerLink]="['/product', product.id]">{{ product.name }}</a></h3>
+        <h2 class="product-name" style="font-size: 1.1rem; margin: 0 0 8px 0;"><a [routerLink]="['/product', product.id]">{{ product.name }}</a></h2>
         <div class="price-and-badges">
           <div class="product-price">
             <span class="current-price">{{ product.discountPrice || product.price }} جنيه</span>
@@ -43,6 +47,6 @@
   <div class="empty-state" *ngIf="products().length === 0">
     <div class="empty-icon">📱</div>
     <h2>لا توجد منتجات حالياً</h2>
-    <p>سيتم إضافة أحدث الهواتف والإكسسوارات قريباً. يرجى التحقق لاحقاً!</p>
+    <p>سيتم إضافة أحدث الهواتف والإكسسوارات بمدينة العبور قريباً. يرجى التحقق لاحقاً!</p>
   </div>
 </div>

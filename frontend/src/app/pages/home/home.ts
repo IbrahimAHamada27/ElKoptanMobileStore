@@ -4,8 +4,8 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SettingService } from '../../core/services/setting.service';
+import { SeoService } from '../../core/services/seo.service';
 import { computed } from '@angular/core';
-import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-home',
@@ -17,8 +17,7 @@ export class Home implements OnInit {
   productService = inject(ProductService);
   cartService = inject(CartService);
   settingService = inject(SettingService);
-  titleService = inject(Title);
-  metaService = inject(Meta);
+  seoService = inject(SeoService);
 
   products = computed(() => {
     const data = this.settingService.featuredProductsSignal();
@@ -32,15 +31,15 @@ export class Home implements OnInit {
   });
 
   ngOnInit() {
-    this.titleService.setTitle('الرئيسية | القبطان موبايل ستور');
-    this.metaService.updateTag({ 
-      name: 'description', 
-      content: 'مرحبًا بك في القبطان موبايل ستور، متجرك الأول لأحدث الهواتف الذكية والإكسسوارات الأصلية في مصر بأفضل الأسعار وبأعلى جودة خدمة.' 
-    });
-    this.metaService.updateTag({ property: 'og:title', content: 'الرئيسية | القبطان موبايل ستور' });
-    this.metaService.updateTag({ 
-      property: 'og:description', 
-      content: 'مرحبًا بك في القبطان موبايل ستور، متجرك الأول لأحدث الهواتف الذكية والإكسسوارات الأصلية في مصر بأفضل الأسعار وبأعلى جودة خدمة.' 
+    this.seoService.setPageSeo({
+      title: 'القبطان موبايل ستور | أفضل محل موبايلات واكسسوارات بمدينة العبور',
+      description: 'أفضل محل موبايلات واكسسوارات وصيانة هواتف ذكية (آيفون، سامسونج، شاومي، ريلمي، أوبو) بمدينة العبور الحي الأول والقليوبية بأفضل الأسعار وأقوى العروض.',
+      keywords: 'محل موبيلات في العبور, محل موبايلات في العبور, محل موبيلات العبور, أفضل محل موبايلات في العبور, أفضل محل موبيلات في الحي الأول العبور, شراء موبايل في العبور, صيانة موبايلات في العبور, اكسسوارات موبايلات في العبور, Elkoptan Mobile Store',
+      url: '/',
+      jsonLd: [
+        this.seoService.getWebSiteSchema(),
+        this.seoService.localBusinessData
+      ]
     });
   }
 

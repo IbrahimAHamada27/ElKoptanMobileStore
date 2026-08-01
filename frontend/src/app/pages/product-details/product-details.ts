@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService, Product } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
-import { Title, Meta } from '@angular/platform-browser';
+import { SeoService } from '../../core/services/seo.service';
 
 @Component({
   selector: 'app-product-details',
@@ -15,8 +15,7 @@ export class ProductDetails implements OnInit {
   productService = inject(ProductService);
   cartService = inject(CartService);
   route = inject(ActivatedRoute);
-  titleService = inject(Title);
-  metaService = inject(Meta);
+  seoService = inject(SeoService);
   
   product = signal<Product | undefined>(undefined);
 
@@ -42,17 +41,38 @@ export class ProductDetails implements OnInit {
     const prod = this.productService.getProductById(id);
     this.product.set(prod);
     if (prod) {
-      this.titleService.setTitle(`${prod.name} | القبطان موبايل ستور`);
-      
       const cleanDesc = prod.desc ? prod.desc.replace(/<[^>]*>/g, '') : '';
-      const metaDesc = cleanDesc ? (cleanDesc.length > 150 ? cleanDesc.slice(0, 150) + '...' : cleanDesc) : `اشترِ ${prod.name} الأصلي بأفضل الأسعار والضمان من القبطان موبايل ستور.`;
-      
-      this.metaService.updateTag({ name: 'description', content: metaDesc });
-      this.metaService.updateTag({ property: 'og:title', content: `${prod.name} | القبطان موبايل ستور` });
-      this.metaService.updateTag({ property: 'og:description', content: metaDesc });
-      if (prod.image) {
-        this.metaService.updateTag({ property: 'og:image', content: prod.image });
-      }
+      const metaDesc = cleanDesc 
+        ? (cleanDesc.length > 150 ? cleanDesc.slice(0, 150) + '...' : cleanDesc) 
+        : `اشترِ ${prod.name} بأفضل سعر من القبطان موبايل ستور بمدينة العبور الحي الأول. أسعار ممتازة وضمان معتمد.`;
+
+      const categoryName = prod.category === 'accessory' ? 'الإكسسوارات' : 'الهواتف الذكية';
+      const categoryUrl = prod.category === 'accessory' ? '/accessories' : '/phones';
+
+      const productSchema = this.seoService.getProductSchema({
+        name: prod.name,
+        description: metaDesc,
+        image: prod.image,
+        price: prod.price,
+        discountPrice: prod.discountPrice,
+        url: `/product/${id}`,
+        category: categoryName
+      });
+
+      const breadcrumbSchema = this.seoService.getBreadcrumbSchema([
+        { name: 'الرئيسية', url: '/' },
+        { name: categoryName, url: categoryUrl },
+        { name: prod.name, url: `/product/${id}` }
+      ]);
+
+      this.seoService.setPageSeo({
+        title: `${prod.name} | أسعار الموبايلات والاكسسوارات في العبور | القبطان ستور`,
+        description: metaDesc,
+        keywords: `${prod.name}, أسعار الموبايلات في العبور, شراء ${prod.name} في العبور, محل موبيلات في العبور, القبطان موبايل ستور`,
+        image: prod.image,
+        url: `/product/${id}`,
+        jsonLd: [breadcrumbSchema, productSchema]
+      });
     }
   }
 }

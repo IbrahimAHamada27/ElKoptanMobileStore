@@ -41,6 +41,7 @@ app.use('/api/v1/auth', require('./routes/auth.route'));
 app.use('/api/v1/product', require('./routes/product.route'));
 app.use('/api/v1/purchase', require('./routes/purchase.route'));
 app.use('/api/v1/setting', require('./routes/setting.route'));
+app.use('/', require('./routes/seo.route'));
 // Automatically seed/ensure Super Admin exists in database
 async function initSuperAdmin() {
     try {

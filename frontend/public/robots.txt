@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Allow: /phones
+Allow: /accessories
+Allow: /offers
+Allow: /maintenance
+Allow: /faq
+Allow: /contact
+Allow: /cash
+Allow: /product/
+
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /login
+
+Sitemap: https://elkoptan-mobile.com/sitemap.xml

@@ -1,11 +1,11 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SettingService } from '../../core/services/setting.service';
+import { SeoService } from '../../core/services/seo.service';
 import { computed } from '@angular/core';
-import { Title, Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-offers',
@@ -17,8 +17,7 @@ export class Offers implements OnInit {
   productService = inject(ProductService);
   cartService = inject(CartService);
   settingService = inject(SettingService);
-  titleService = inject(Title);
-  metaService = inject(Meta);
+  seoService = inject(SeoService);
 
   offers = computed(() => {
     const data = this.settingService.featuredProductsSignal();
@@ -28,15 +27,15 @@ export class Offers implements OnInit {
   });
 
   ngOnInit() {
-    this.titleService.setTitle('العروض المميزة والتخفيضات | القبطان موبايل ستور');
-    this.metaService.updateTag({ 
-      name: 'description', 
-      content: 'استمتع بأقوى العروض والتخفيضات المميزة والحصرية على الهواتف والاكسسوارات من القبطان موبايل ستور. وفر أكثر مع عروض القبطان.' 
-    });
-    this.metaService.updateTag({ property: 'og:title', content: 'العروض المميزة والتخفيضات | القبطان موبايل ستور' });
-    this.metaService.updateTag({ 
-      property: 'og:description', 
-      content: 'استمتع بأقوى العروض والتخفيضات المميزة والحصرية على الهواتف والاكسسوارات من القبطان موبايل ستور. وفر أكثر مع عروض القبطان.' 
+    this.seoService.setPageSeo({
+      title: 'أفضل عروض الموبايلات والتخفيضات في العبور | القبطان ستور',
+      description: 'أقوى عروض الموبايلات وتخفيضات الهواتف الذكية والإكسسوارات في مدينة العبور. أسعار تنافسية وخصومات حصرية من القبطان موبايل ستور.',
+      keywords: 'أفضل عروض الموبايلات في العبور, عروض موبايلات العبور, تخفيضات موبايلات مدينة العبور, شراء موبايلات بالتقسيط في العبور, عروض القبطان موبايل ستور',
+      url: '/offers',
+      jsonLd: this.seoService.getBreadcrumbSchema([
+        { name: 'الرئيسية', url: '/' },
+        { name: 'العروض المميزة', url: '/offers' }
+      ])
     });
   }
 

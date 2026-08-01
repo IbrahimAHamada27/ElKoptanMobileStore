@@ -1,13 +1,13 @@
 <div class="phones-container">
-  <h1 class="page-title">أحدث الإكسسوارات</h1>
+  <h1 class="page-title">إكسسوارات موبايلات وجرابات وشواحن واسكرينات في مدينة العبور</h1>
   <div class="products-grid">
-    <div class="product-card" *ngFor="let item of accessories()">
+    <div class="product-card" *ngFor="let item of accessories(); let i = index">
       <div class="product-image-container">
         <a [routerLink]="['/product', item.id]" style="cursor: pointer;">
-          <img [src]="item.image" [alt]="item.name" class="product-image" />
+          <img [src]="item.image" [alt]="item.name + ' - اكسسوارات موبايلات في العبور'" class="product-image" [attr.loading]="i < 4 ? 'eager' : 'lazy'" />
         </a>
         <div class="cart-controls">
-          <button class="add-to-cart-btn" *ngIf="cartService.getQuantity(item.id) === 0" (click)="cartService.addToCart(item)">
+          <button class="add-to-cart-btn" *ngIf="cartService.getQuantity(item.id) === 0" (click)="cartService.addToCart(item)" [attr.aria-label]="'إضافة ' + item.name + ' إلى السلة'">
             <span>+</span>
           </button>
           <div class="quantity-control-pill" *ngIf="cartService.getQuantity(item.id) > 0">
@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="product-details">
-        <h3 class="product-name"><a [routerLink]="['/product', item.id]">{{ item.name }}</a></h3>
+        <h2 class="product-name" style="font-size: 1.1rem; margin: 0 0 8px 0;"><a [routerLink]="['/product', item.id]">{{ item.name }}</a></h2>
         <div class="price-and-badges">
           <div class="product-price">
             <span class="current-price">{{ item.discountPrice || item.price }} جنيه</span>
