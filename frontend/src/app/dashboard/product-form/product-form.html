@@ -54,7 +54,7 @@
 
     <div class="form-group">
       <label>صورة المنتج {{ isEditMode ? '(اختياري إذا لم ترغب بتغييرها)' : '*' }}</label>
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="form-control" [required]="!isEditMode">
+      <input type="file" (change)="onFileSelected($event)" accept="image/*,.jpg,.jpeg,.png,.webp,.avif,.gif,.svg,.bmp,.tiff,.tif,.heic,.heif,.jfif" class="form-control" [required]="!isEditMode">
     </div>
 
     <button type="submit" class="btn-primary submit-btn" [disabled]="!productForm.form.valid || (!isEditMode && !selectedFile)">
