@@ -1,0 +1,33 @@
+<div class="pagination-wrapper" *ngIf="totalItems > 0">
+  <div class="pagination-info">
+    عرض {{ startItem }} - {{ endItem }} من أصل {{ totalItems }} منتج
+  </div>
+
+  <div class="pagination-controls" *ngIf="totalPages > 1">
+    <button 
+      class="pagination-btn prev-btn" 
+      [disabled]="currentPage === 1" 
+      (click)="prevPage()"
+      aria-label="الصفحة السابقة">
+      &larr; السابق
+    </button>
+
+    <div class="page-numbers">
+      <button 
+        *ngFor="let page of pages" 
+        class="page-num-btn" 
+        [class.active]="page === currentPage"
+        (click)="selectPage(page)">
+        {{ page }}
+      </button>
+    </div>
+
+    <button 
+      class="pagination-btn next-btn" 
+      [disabled]="currentPage === totalPages" 
+      (click)="nextPage()"
+      aria-label="الصفحة التالية">
+      التالي &rarr;
+    </button>
+  </div>
+</div>

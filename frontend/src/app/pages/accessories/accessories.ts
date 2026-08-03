@@ -1,13 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SeoService } from '../../core/services/seo.service';
+import { PaginationComponent } from '../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-accessories',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, PaginationComponent],
   templateUrl: './accessories.html',
   styleUrl: './accessories.css'
 })
@@ -16,7 +17,22 @@ export class Accessories implements OnInit {
   cartService = inject(CartService);
   seoService = inject(SeoService);
 
-  accessories = this.productService.getProductsByCategory('accessory');
+  currentPage = signal<number>(1);
+  pageSize = 30;
+
+  allAccessories = this.productService.getProductsByCategory('accessory');
+
+  paginatedAccessories = computed(() => {
+    const list = this.allAccessories();
+    const page = this.currentPage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  onPageChange(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   ngOnInit() {
     this.seoService.setPageSeo({

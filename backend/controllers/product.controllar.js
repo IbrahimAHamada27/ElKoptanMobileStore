@@ -4,7 +4,33 @@ const sharp = require('sharp');
 
 exports.getProducts = async (req, res) => {
     try {
-        const products = await product.find().sort({ orderIndex: 1 }).lean();
+        const { category, isBestSeller, isNewProduct } = req.query;
+        let query = {};
+        if (category) query.category = category;
+        if (isBestSeller === 'true') query.isBestSeller = true;
+        if (isNewProduct === 'true') query.isNewProduct = true;
+
+        if (req.query.page || req.query.limit) {
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 30;
+            const skip = (page - 1) * limit;
+
+            const total = await product.countDocuments(query);
+            const products = await product.find(query).sort({ orderIndex: 1 }).skip(skip).limit(limit).lean();
+
+            return res.status(200).json({
+                massage: 'product list',
+                data: products,
+                pagination: {
+                    total,
+                    page,
+                    limit,
+                    totalPages: Math.ceil(total / limit)
+                }
+            });
+        }
+
+        const products = await product.find(query).sort({ orderIndex: 1 }).lean();
         res.status(200).json({massage : 'product list', data: products});
     } catch (error) {
         res.status(500).json({ error: error.message });

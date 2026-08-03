@@ -1,7 +1,7 @@
 <div class="phones-container">
   <h1 class="page-title">إكسسوارات موبايلات وجرابات وشواحن واسكرينات في مدينة العبور</h1>
   <div class="products-grid">
-    <div class="product-card" *ngFor="let item of accessories(); let i = index">
+    <div class="product-card" *ngFor="let item of paginatedAccessories(); let i = index">
       <div class="product-image-container">
         <a [routerLink]="['/product', item.id]" style="cursor: pointer;">
           <img [src]="item.image" [alt]="item.name + ' - اكسسوارات موبايلات في العبور'" class="product-image" [attr.loading]="i < 4 ? 'eager' : 'lazy'" />
@@ -40,4 +40,11 @@
       </div>
     </div>
   </div>
+
+  <app-pagination 
+    [currentPage]="currentPage()" 
+    [totalItems]="allAccessories().length" 
+    [pageSize]="pageSize" 
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 </div>

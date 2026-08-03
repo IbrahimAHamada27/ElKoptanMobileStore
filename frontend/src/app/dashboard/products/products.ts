@@ -6,10 +6,11 @@ import { ProductService, Product } from '../../core/services/product.service';
 import { Title, Meta } from '@angular/platform-browser';
 import { ToastService } from '../../core/services/toast.service';
 import { computed, signal, effect } from '@angular/core';
+import { PaginationComponent } from '../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-dashboard-products',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, PaginationComponent],
   templateUrl: './products.html',
   styleUrl: './products.css'
 })
@@ -22,10 +23,25 @@ export class DashboardProducts implements OnInit {
 
   category = signal<string>('phone');
 
+  currentPage = signal<number>(1);
+  pageSize = 30;
+
   // Local list of products to allow in-memory reordering before saving
   localProducts = signal<Product[]>([]);
   originalProductsString = '';
   hasUnsavedChanges = false;
+
+  displayProducts = computed(() => {
+    const list = this.localProducts();
+    const page = this.currentPage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  onPageChange(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   // Computed signal that automatically updates when category or productsSignal changes (as base data source)
   productsSource = computed(() => {

@@ -3,7 +3,7 @@
   <a [routerLink]="['/admin/add-product']" [queryParams]="{category: category()}" class="btn-primary" style="text-decoration:none; display:inline-block; padding:10px 15px;">إضافة منتج جديد +</a>
 </div>
 
-<div class="products-table-container" style="margin-bottom: 80px;">
+<div class="products-table-container" style="margin-bottom: 20px;">
   <table class="admin-table">
     <thead>
       <tr>
@@ -17,11 +17,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of localProducts(); let i = index">
+      <tr *ngFor="let product of displayProducts(); let i = index">
         <td>
           <div class="order-controls">
-            <button class="btn-icon" (click)="moveUp(i)" [disabled]="i === 0">⬆️</button>
-            <button class="btn-icon" (click)="moveDown(i)" [disabled]="i === localProducts().length - 1">⬇️</button>
+            <button class="btn-icon" (click)="moveUp((currentPage() - 1) * pageSize + i)" [disabled]="(currentPage() - 1) * pageSize + i === 0">⬆️</button>
+            <button class="btn-icon" (click)="moveDown((currentPage() - 1) * pageSize + i)" [disabled]="(currentPage() - 1) * pageSize + i === localProducts().length - 1">⬇️</button>
           </div>
         </td>
         <td><img [src]="product.image" class="table-img" alt="Product Image"></td>
@@ -43,6 +43,13 @@
       </tr>
     </tbody>
   </table>
+
+  <app-pagination 
+    [currentPage]="currentPage()" 
+    [totalItems]="localProducts().length" 
+    [pageSize]="pageSize" 
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
 </div>
 
 <div class="save-bar">

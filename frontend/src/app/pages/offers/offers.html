@@ -10,7 +10,7 @@
 
   <div class="offers-container">
     <div class="products-grid">
-      <div class="product-card" *ngFor="let product of offers(); let i = index">
+      <div class="product-card" *ngFor="let product of paginatedOffers(); let i = index">
         <div class="product-image-container">
           <a [routerLink]="['/product', product.id]" style="cursor: pointer;">
             <img [src]="product.image" [alt]="product.name + ' - عروض وتخفيضات الموبايلات بالعبور'" class="product-image" [attr.loading]="i < 4 ? 'eager' : 'lazy'" />
@@ -49,5 +49,12 @@
         </div>
       </div>
     </div>
+
+    <app-pagination 
+      [currentPage]="currentPage()" 
+      [totalItems]="allOffers().length" 
+      [pageSize]="pageSize" 
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
   </div>
 </div>

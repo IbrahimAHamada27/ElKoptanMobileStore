@@ -1,13 +1,14 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SeoService } from '../../core/services/seo.service';
+import { PaginationComponent } from '../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-phones',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, PaginationComponent],
   templateUrl: './phones.html',
   styleUrl: './phones.css'
 })
@@ -16,7 +17,22 @@ export class Phones implements OnInit {
   cartService = inject(CartService);
   seoService = inject(SeoService);
 
-  phones = this.productService.getProductsByCategory('phone');
+  currentPage = signal<number>(1);
+  pageSize = 30;
+
+  allPhones = this.productService.getProductsByCategory('phone');
+
+  paginatedPhones = computed(() => {
+    const list = this.allPhones();
+    const page = this.currentPage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  onPageChange(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   ngOnInit() {
     this.seoService.setPageSeo({

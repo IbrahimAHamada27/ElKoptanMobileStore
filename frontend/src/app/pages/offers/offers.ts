@@ -1,15 +1,15 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SettingService } from '../../core/services/setting.service';
 import { SeoService } from '../../core/services/seo.service';
-import { computed } from '@angular/core';
+import { PaginationComponent } from '../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-offers',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, PaginationComponent],
   templateUrl: './offers.html',
   styleUrl: './offers.css'
 })
@@ -19,12 +19,27 @@ export class Offers implements OnInit {
   settingService = inject(SettingService);
   seoService = inject(SeoService);
 
-  offers = computed(() => {
+  currentPage = signal<number>(1);
+  pageSize = 30;
+
+  allOffers = computed(() => {
     const data = this.settingService.featuredProductsSignal();
     const ids = data?.offers || [];
     if (!ids || !ids.length) return [];
     return ids.map(id => this.productService.getProductById(id)).filter(p => !!p);
   });
+
+  paginatedOffers = computed(() => {
+    const list = this.allOffers();
+    const page = this.currentPage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  onPageChange(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   ngOnInit() {
     this.seoService.setPageSeo({
