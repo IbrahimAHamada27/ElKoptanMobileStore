@@ -1,15 +1,15 @@
-import { Component, signal, inject, OnInit } from '@angular/core';
+import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SettingService } from '../../core/services/setting.service';
 import { SeoService } from '../../core/services/seo.service';
-import { computed } from '@angular/core';
+import { PaginationComponent } from '../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, PaginationComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -19,16 +19,31 @@ export class Home implements OnInit {
   settingService = inject(SettingService);
   seoService = inject(SeoService);
 
-  products = computed(() => {
+  currentPage = signal<number>(1);
+  pageSize = 30;
+
+  allProducts = computed(() => {
     const data = this.settingService.featuredProductsSignal();
     const ids = data?.home || [];
-    const allProducts = this.productService.products();
+    const products = this.productService.products();
     if (!ids || !ids.length) {
-      return allProducts;
+      return products;
     }
     const featured = ids.map(id => this.productService.getProductById(id)).filter(p => !!p);
-    return featured.length > 0 ? featured : allProducts;
+    return featured.length > 0 ? featured : products;
   });
+
+  paginatedProducts = computed(() => {
+    const list = this.allProducts();
+    const page = this.currentPage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  onPageChange(page: number) {
+    this.currentPage.set(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   ngOnInit() {
     this.seoService.setPageSeo({

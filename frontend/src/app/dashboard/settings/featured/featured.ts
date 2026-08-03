@@ -1,13 +1,14 @@
-import { Component, inject, effect, HostListener } from '@angular/core';
+import { Component, inject, effect, HostListener, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SettingService } from '../../../core/services/setting.service';
 import { ProductService, Product } from '../../../core/services/product.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { PaginationComponent } from '../../../shared/pagination/pagination';
 
 @Component({
   selector: 'app-dashboard-featured',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   template: `
     <div class="admin-page-header">
       <h2>إدارة الرئيسية والعروض</h2>
@@ -37,16 +38,23 @@ import { ToastService } from '../../../core/services/toast.service';
         </div>
 
         <div class="selected-products-list">
-          <div class="selected-product-item" *ngFor="let id of featuredData.home; let i = index">
+          <div class="selected-product-item" *ngFor="let id of displayHomeProducts(); let i = index">
             <span class="product-name-txt">{{ getProductName(id) }}</span>
             <div class="item-actions">
-              <button class="btn-icon move-btn" [disabled]="i === 0" (click)="moveHome(i, -1)">⬆️</button>
-              <button class="btn-icon move-btn" [disabled]="i === featuredData.home.length - 1" (click)="moveHome(i, 1)">⬇️</button>
-              <button class="btn-icon delete-btn" (click)="removeHomeProduct(i)">🗑️ إزالة</button>
+              <button class="btn-icon move-btn" [disabled]="(homePage() - 1) * pageSize + i === 0" (click)="moveHome((homePage() - 1) * pageSize + i, -1)">⬆️</button>
+              <button class="btn-icon move-btn" [disabled]="(homePage() - 1) * pageSize + i === featuredData.home.length - 1" (click)="moveHome((homePage() - 1) * pageSize + i, 1)">⬇️</button>
+              <button class="btn-icon delete-btn" (click)="removeHomeProduct((homePage() - 1) * pageSize + i)">🗑️ إزالة</button>
             </div>
           </div>
           <div *ngIf="featuredData.home.length === 0" class="empty-msg">لم يتم اختيار أي منتجات للرئيسية.</div>
         </div>
+        
+        <app-pagination 
+          [currentPage]="homePage()" 
+          [totalItems]="featuredData.home.length" 
+          [pageSize]="pageSize" 
+          (pageChange)="homePage.set($event)">
+        </app-pagination>
       </div>
 
       <hr style="margin: 40px 0; border: 0; border-top: 1px solid #eee;">
@@ -72,16 +80,23 @@ import { ToastService } from '../../../core/services/toast.service';
         </div>
 
         <div class="selected-products-list">
-          <div class="selected-product-item" *ngFor="let id of featuredData.offers; let i = index">
+          <div class="selected-product-item" *ngFor="let id of displayOffersProducts(); let i = index">
             <span class="product-name-txt">{{ getProductName(id) }}</span>
             <div class="item-actions">
-              <button class="btn-icon move-btn" [disabled]="i === 0" (click)="moveOffer(i, -1)">⬆️</button>
-              <button class="btn-icon move-btn" [disabled]="i === featuredData.offers.length - 1" (click)="moveOffer(i, 1)">⬇️</button>
-              <button class="btn-icon delete-btn" (click)="removeOfferProduct(i)">🗑️ إزالة</button>
+              <button class="btn-icon move-btn" [disabled]="(offersPage() - 1) * pageSize + i === 0" (click)="moveOffer((offersPage() - 1) * pageSize + i, -1)">⬆️</button>
+              <button class="btn-icon move-btn" [disabled]="(offersPage() - 1) * pageSize + i === featuredData.offers.length - 1" (click)="moveOffer((offersPage() - 1) * pageSize + i, 1)">⬇️</button>
+              <button class="btn-icon delete-btn" (click)="removeOfferProduct((offersPage() - 1) * pageSize + i)">🗑️ إزالة</button>
             </div>
           </div>
           <div *ngIf="featuredData.offers.length === 0" class="empty-msg">لم يتم اختيار أي منتجات للعروض.</div>
         </div>
+
+        <app-pagination 
+          [currentPage]="offersPage()" 
+          [totalItems]="featuredData.offers.length" 
+          [pageSize]="pageSize" 
+          (pageChange)="offersPage.set($event)">
+        </app-pagination>
       </div>
 
     </div>
@@ -125,6 +140,24 @@ export class DashboardFeatured {
     home: [],
     offers: []
   };
+
+  homePage = signal<number>(1);
+  offersPage = signal<number>(1);
+  pageSize = 30;
+
+  displayHomeProducts = computed(() => {
+    const list = this.featuredData.home;
+    const page = this.homePage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
+
+  displayOffersProducts = computed(() => {
+    const list = this.featuredData.offers;
+    const page = this.offersPage();
+    const start = (page - 1) * this.pageSize;
+    return list.slice(start, start + this.pageSize);
+  });
 
   originalDataString: string = '';
   hasUnsavedChanges = false;

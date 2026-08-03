@@ -4,7 +4,7 @@
   </h1>
 
   <div class="products-grid">
-    <div class="product-card" *ngFor="let product of products(); let i = index">
+    <div class="product-card" *ngFor="let product of paginatedProducts(); let i = index">
       <div class="product-image-container">
         <a [routerLink]="['/product', product.id]" style="cursor: pointer;">
           <img [src]="product.image" [alt]="product.name + ' - القبطان موبايل ستور مدينة العبور'" class="product-image" [attr.loading]="i < 4 ? 'eager' : 'lazy'" [attr.fetchpriority]="i < 2 ? 'high' : 'auto'" />
@@ -44,7 +44,14 @@
     </div>
   </div>
 
-  <div class="empty-state" *ngIf="products().length === 0">
+  <app-pagination 
+    [currentPage]="currentPage()" 
+    [totalItems]="allProducts().length" 
+    [pageSize]="pageSize" 
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
+
+  <div class="empty-state" *ngIf="allProducts().length === 0">
     <div class="empty-icon">📱</div>
     <h2>لا توجد منتجات حالياً</h2>
     <p>سيتم إضافة أحدث الهواتف والإكسسوارات بمدينة العبور قريباً. يرجى التحقق لاحقاً!</p>
