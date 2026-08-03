@@ -1,5 +1,6 @@
 const product = require('../models/product.model');
 const { Setting } = require('../models/setting.model');
+const sharp = require('sharp');
 
 exports.getProducts = async (req, res) => {
     try {
@@ -16,8 +17,13 @@ exports.addProduct = async (req, res) => {
         
         if (!req.file) return res.status(400).json({error: 'Image is required'});
         
-        const base64Data = req.file.buffer.toString('base64');
-        const imagURL = `data:${req.file.mimetype};base64,${base64Data}`;
+        const compressedBuffer = await sharp(req.file.buffer)
+            .resize({ width: 600, fit: 'inside', withoutEnlargement: true })
+            .jpeg({ quality: 65 })
+            .toBuffer();
+
+        const base64Data = compressedBuffer.toString('base64');
+        const imagURL = `data:image/jpeg;base64,${base64Data}`;
 
         const myProduct = await product.create({
             name, 
@@ -55,8 +61,12 @@ exports.updateProduct = async (req, res) => {
         const id = req.params.id;
         const updateData = { ...req.body };
         if(req.file) {
-            const base64Data = req.file.buffer.toString('base64');
-            updateData.imagURL = `data:${req.file.mimetype};base64,${base64Data}`;
+            const compressedBuffer = await sharp(req.file.buffer)
+                .resize({ width: 600, fit: 'inside', withoutEnlargement: true })
+                .jpeg({ quality: 65 })
+                .toBuffer();
+            const base64Data = compressedBuffer.toString('base64');
+            updateData.imagURL = `data:image/jpeg;base64,${base64Data}`;
         }
         if (updateData.price) updateData.price = Number(updateData.price);
         if (updateData.discountPrice !== undefined) {
