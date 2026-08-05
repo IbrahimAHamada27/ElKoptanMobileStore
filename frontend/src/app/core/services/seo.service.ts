@@ -23,7 +23,7 @@ export class SeoService {
 
   private readonly siteName = 'القبطان موبايل ستور | Elkoptan Mobile Store';
   private readonly defaultBaseUrl = 'https://elkoptan-mobile.com';
-  private readonly defaultImage = 'https://elkoptan-mobile.com/assets/images/logo.jpg';
+  private readonly defaultImage = 'https://elkoptan-mobile.com/assets/images/logo.webp';
 
   // All 5 Official Branches Data
   public readonly branches = [

@@ -1,7 +1,7 @@
 <div class="product-details-container" *ngIf="product() as p; else notFound">
   <div class="product-images">
     <div class="main-image-container">
-      <img [src]="p.image" [alt]="p.name" class="main-image" style="width: 100%; max-width: 400px; border-radius: 12px; object-fit: contain;" />
+      <img [src]="p.image" [alt]="p.name" class="main-image" loading="eager" fetchpriority="high" style="width: 100%; max-width: 400px; border-radius: 12px; object-fit: contain;" />
     </div>
   </div>
   

@@ -8,6 +8,17 @@ const app = express();
 const cors = require('./middlewares/cors.middleware');
 app.use(cors);
 
+const compression = require('compression');
+app.use(compression());
+
+// Cache-Control headers for read-only GET API endpoints
+app.use((req, res, next) => {
+    if (req.method === 'GET' && req.path.startsWith('/api/')) {
+        res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
+    }
+    next();
+});
+
 const rateLimit = require('express-rate-limit');
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -34,7 +45,10 @@ connectDB().then(() => {
 
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+    maxAge: '1y',
+    immutable: true
+}));
 
 app.use('/api/v1/user', require('./routes/user.route'));
 app.use('/api/v1/auth', require('./routes/auth.route'));

@@ -16,8 +16,9 @@ exports.getProducts = async (req, res) => {
             const skip = (page - 1) * limit;
 
             const total = await product.countDocuments(query);
-            const products = await product.find(query).sort({ orderIndex: 1 }).skip(skip).limit(limit).lean();
+            const products = await product.find(query).select('-__v').sort({ orderIndex: 1 }).skip(skip).limit(limit).lean();
 
+            res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
             return res.status(200).json({
                 massage: 'product list',
                 data: products,
@@ -30,7 +31,8 @@ exports.getProducts = async (req, res) => {
             });
         }
 
-        const products = await product.find(query).sort({ orderIndex: 1 }).lean();
+        const products = await product.find(query).select('-__v').sort({ orderIndex: 1 }).lean();
+        res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
         res.status(200).json({massage : 'product list', data: products});
     } catch (error) {
         res.status(500).json({ error: error.message });
