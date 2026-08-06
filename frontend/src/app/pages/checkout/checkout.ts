@@ -144,39 +144,40 @@ export class Checkout implements OnInit {
 
     const origin = typeof window !== 'undefined' ? window.location.origin : 'https://elkoptan-mobile.com';
 
-    // Build clean, beautifully formatted WhatsApp message using standard UTF-8 text
+    // Build ultra-clean WhatsApp message without any symbols and with divider lines under each section and item
     let message = `*طلب جديد من القبطان موبايل ستور*\n`;
     message += `----------------------------------------\n\n`;
     
     message += `*بيانات العميل:*\n`;
-    message += `• الاسم: ${this.formData.fullName.trim()}\n`;
-    message += `• رقم الهاتف: ${this.formData.phone.trim()}\n`;
+    message += `الاسم: ${this.formData.fullName.trim()}\n`;
+    message += `رقم الهاتف: ${this.formData.phone.trim()}\n`;
     if (this.formData.altPhone.trim()) {
-      message += `• رقم هاتف بديل: ${this.formData.altPhone.trim()}\n`;
+      message += `رقم هاتف بديل: ${this.formData.altPhone.trim()}\n`;
     }
-    message += `\n`;
+    message += `\n----------------------------------------\n\n`;
 
     message += `*عنوان التوصيل:*\n`;
-    message += `• المحافظة: ${this.formData.governorate.trim()}\n`;
-    message += `• المدينة: ${this.formData.city.trim()}\n`;
-    message += `• المنطقة: ${this.formData.area.trim()}\n`;
-    message += `• الشارع: ${this.formData.street.trim()}\n`;
+    message += `المحافظة: ${this.formData.governorate.trim()}\n`;
+    message += `المدينة: ${this.formData.city.trim()}\n`;
+    message += `المنطقة: ${this.formData.area.trim()}\n`;
+    message += `الشارع: ${this.formData.street.trim()}\n`;
     if (this.formData.building.trim()) {
-      message += `• المبنى / العمارة: ${this.formData.building.trim()}\n`;
+      message += `المبنى أو العمارة: ${this.formData.building.trim()}\n`;
     }
     if (this.formData.floor.trim() || this.formData.apartment.trim()) {
-      message += `• الدور: ${this.formData.floor.trim() || '-'} | الشقة: ${this.formData.apartment.trim() || '-'}\n`;
+      message += `الدور: ${this.formData.floor.trim() || 'غير محدد'} | الشقة: ${this.formData.apartment.trim() || 'غير محدد'}\n`;
     }
     if (this.formData.landmark.trim()) {
-      message += `• علامة مميزة: ${this.formData.landmark.trim()}\n`;
+      message += `علامة مميزة: ${this.formData.landmark.trim()}\n`;
     }
     if (this.formData.notes.trim()) {
-      message += `• ملاحظات الطلب: ${this.formData.notes.trim()}\n`;
+      message += `ملاحظات الطلب: ${this.formData.notes.trim()}\n`;
     }
-    message += `\n`;
+    message += `\n----------------------------------------\n\n`;
 
-    message += `*طريقة الدفع:* ${this.getPaymentLabel(this.formData.paymentMethod)}\n\n`;
-    message += `----------------------------------------\n`;
+    message += `*طريقة الدفع:* ${this.getPaymentLabel(this.formData.paymentMethod)}\n`;
+    message += `----------------------------------------\n\n`;
+
     message += `*المنتجات المطلوبة:*\n\n`;
 
     this.cartService.cartItems().forEach((item, index) => {
@@ -185,13 +186,13 @@ export class Checkout implements OnInit {
       const productUrl = `${origin}/product/${item.product.id}`;
 
       message += `${index + 1}. *${item.product.name}*\n`;
-      message += `   - الكمية: ${item.quantity}\n`;
-      message += `   - سعر الوحدة: ${price} جنيه\n`;
-      message += `   - الإجمالي: ${total} جنيه\n`;
-      message += `   - رابط المنتج: ${productUrl}\n\n`;
+      message += `الكمية: ${item.quantity}\n`;
+      message += `سعر الوحدة: ${price} جنيه\n`;
+      message += `الإجمالي: ${total} جنيه\n`;
+      message += `رابط المنتج: ${productUrl}\n`;
+      message += `----------------------------------------\n\n`;
     });
 
-    message += `----------------------------------------\n`;
     message += `*الإجمالي الكلي:* *${this.cartService.totalPrice()} جنيه*\n`;
     message += `----------------------------------------\n\n`;
     message += `يرجى تأكيد الطلب وتحديد ميعاد التسليم. شكراً لتسوقكم معنا!`;
