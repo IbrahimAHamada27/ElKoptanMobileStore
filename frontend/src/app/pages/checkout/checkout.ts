@@ -142,51 +142,61 @@ export class Checkout implements OnInit {
       phoneNumber = '2' + phoneNumber;
     }
 
-    // Build structured WhatsApp message
-    let message = `🛒 *طلب جديد من القبطان موبايل ستور*\n\n`;
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://elkoptan-mobile.com';
+    const numberEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟'];
+
+    // Build beautifully formatted WhatsApp message
+    let message = `🛒 *طلب جديد من القبطان موبايل ستور*\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
     message += `👤 *بيانات العميل:*\n`;
-    message += `• الاسم الكامل: ${this.formData.fullName.trim()}\n`;
-    message += `• رقم الهاتف: ${this.formData.phone.trim()}\n`;
+    message += `  ▫️ *الاسم:* ${this.formData.fullName.trim()}\n`;
+    message += `  ▫️ *رقم الهاتف:* ${this.formData.phone.trim()}\n`;
     if (this.formData.altPhone.trim()) {
-      message += `• رقم هاتف بديل: ${this.formData.altPhone.trim()}\n`;
+      message += `  ▫️ *رقم بديل:* ${this.formData.altPhone.trim()}\n`;
     }
     message += `\n`;
 
     message += `📍 *عنوان التوصيل:*\n`;
-    message += `• المحافظة: ${this.formData.governorate.trim()}\n`;
-    message += `• المدينة: ${this.formData.city.trim()}\n`;
-    message += `• المنطقة: ${this.formData.area.trim()}\n`;
-    message += `• الشارع: ${this.formData.street.trim()}\n`;
+    message += `  ▫️ *المحافظة:* ${this.formData.governorate.trim()}\n`;
+    message += `  ▫️ *المدينة:* ${this.formData.city.trim()}\n`;
+    message += `  ▫️ *المنطقة:* ${this.formData.area.trim()}\n`;
+    message += `  ▫️ *الشارع:* ${this.formData.street.trim()}\n`;
     if (this.formData.building.trim()) {
-      message += `• المبنى / العمارة: ${this.formData.building.trim()}\n`;
+      message += `  ▫️ *المبنى / العمارة:* ${this.formData.building.trim()}\n`;
     }
     if (this.formData.floor.trim() || this.formData.apartment.trim()) {
-      message += `• الدور: ${this.formData.floor.trim() || '-'} | الشقة: ${this.formData.apartment.trim() || '-'}\n`;
+      message += `  ▫️ *الدور:* ${this.formData.floor.trim() || '-'} | *الشقة:* ${this.formData.apartment.trim() || '-'}\n`;
     }
     if (this.formData.landmark.trim()) {
-      message += `• أقرب علامة مميزة: ${this.formData.landmark.trim()}\n`;
+      message += `  ▫️ *علامة مميزة:* ${this.formData.landmark.trim()}\n`;
     }
     if (this.formData.notes.trim()) {
-      message += `• ملاحظات الطلب: ${this.formData.notes.trim()}\n`;
+      message += `  ▫️ *ملاحظات الطلب:* ${this.formData.notes.trim()}\n`;
     }
     message += `\n`;
 
     message += `💳 *طريقة الدفع:* ${this.getPaymentLabel(this.formData.paymentMethod)}\n\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `🛍 *المنتجات المطلوبة:*\n\n`;
 
-    message += `🛍 *المنتجات المطلوبة:*\n`;
     this.cartService.cartItems().forEach((item, index) => {
       const price = item.product.discountPrice || item.product.price;
       const total = price * item.quantity;
-      message += `${index + 1}. *${item.product.name}*\n`;
-      message += `   - الكمية: ${item.quantity}\n`;
-      message += `   - سعر الوحدة: ${price} جنيه\n`;
-      message += `   - الإجمالي: ${total} جنيه\n`;
-    });
-    message += `\n`;
+      const itemNum = numberEmojis[index] || `${index + 1}.`;
+      const productUrl = `${origin}/product/${item.product.id}`;
 
-    message += `💰 *الإجمالي النهائي:* ${this.cartService.totalPrice()} جنيه\n\n`;
-    message += `يرجى تأكيد الطلب والمتابعة لميعاد التسليم. شكراً لكم!`;
+      message += `${itemNum} *${item.product.name}*\n`;
+      message += `   ▫️ الكمية: ${item.quantity}\n`;
+      message += `   ▫️ سعر الوحدة: ${price} جنيه\n`;
+      message += `   ▫️ الإجمالي: ${total} جنيه\n`;
+      message += `   🔗 رابط المنتج: ${productUrl}\n\n`;
+    });
+
+    message += `━━━━━━━━━━━━━━━━━━━━\n`;
+    message += `💵 *الإجمالي الكلي:* *${this.cartService.totalPrice()} جنيه*\n`;
+    message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+    message += `✨ *يرجى تأكيد الطلب وتحديد ميعاد التسليم. شكراً لتسوقكم معنا!*`;
 
     // Open WhatsApp
     window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`, '_blank');
