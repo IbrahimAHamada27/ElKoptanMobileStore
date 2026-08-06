@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, effect } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ProductService, Product } from '../../core/services/product.service';
@@ -17,62 +17,69 @@ export class ProductDetails implements OnInit {
   route = inject(ActivatedRoute);
   seoService = inject(SeoService);
   
-  product = signal<Product | undefined>(undefined);
+  productId = signal<string | null>(null);
+  isLoading = signal<boolean>(true);
+
+  product = computed(() => {
+    const id = this.productId();
+    if (!id) return undefined;
+    return this.productService.getProductById(id);
+  });
 
   constructor() {
     effect(() => {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        this.updateProductData(id);
+      const prod = this.product();
+      const id = this.productId();
+      if (prod && id) {
+        this.updateSeo(prod, id);
       }
     });
   }
 
   ngOnInit() {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe(async params => {
       const id = params.get('id');
       if (id) {
-        this.updateProductData(id);
+        this.productId.set(id);
       }
+      this.isLoading.set(true);
+      await this.productService.loadProducts();
+      this.isLoading.set(false);
     });
   }
 
-  updateProductData(id: string) {
-    const prod = this.productService.getProductById(id);
-    this.product.set(prod);
-    if (prod) {
-      const cleanDesc = prod.desc ? prod.desc.replace(/<[^>]*>/g, '') : '';
-      const metaDesc = cleanDesc 
-        ? (cleanDesc.length > 150 ? cleanDesc.slice(0, 150) + '...' : cleanDesc) 
-        : `اشترِ ${prod.name} بأفضل سعر من القبطان موبايل ستور بمدينة العبور الحي الأول. أسعار ممتازة وضمان معتمد.`;
+  private updateSeo(prod: Product, id: string) {
+    const cleanDesc = prod.desc ? prod.desc.replace(/<[^>]*>/g, '') : '';
+    const metaDesc = cleanDesc 
+      ? (cleanDesc.length > 150 ? cleanDesc.slice(0, 150) + '...' : cleanDesc) 
+      : `اشترِ ${prod.name} بأفضل سعر من القبطان موبايل ستور بمدينة العبور الحي الأول. أسعار ممتازة وضمان معتمد.`;
 
-      const categoryName = prod.category === 'accessory' ? 'الإكسسوارات' : 'الهواتف الذكية';
-      const categoryUrl = prod.category === 'accessory' ? '/accessories' : '/phones';
+    const categoryName = prod.category === 'accessory' ? 'الإكسسوارات' : 'الهواتف الذكية';
+    const categoryUrl = prod.category === 'accessory' ? '/accessories' : '/phones';
 
-      const productSchema = this.seoService.getProductSchema({
-        name: prod.name,
-        description: metaDesc,
-        image: prod.image,
-        price: prod.price,
-        discountPrice: prod.discountPrice,
-        url: `/product/${id}`,
-        category: categoryName
-      });
+    const productSchema = this.seoService.getProductSchema({
+      name: prod.name,
+      description: metaDesc,
+      image: prod.image,
+      price: prod.price,
+      discountPrice: prod.discountPrice,
+      url: `/product/${id}`,
+      category: categoryName
+    });
 
-      const breadcrumbSchema = this.seoService.getBreadcrumbSchema([
-        { name: 'الرئيسية', url: '/' },
-        { name: categoryName, url: categoryUrl },
-        { name: prod.name, url: `/product/${id}` }
-      ]);
+    const breadcrumbSchema = this.seoService.getBreadcrumbSchema([
+      { name: 'الرئيسية', url: '/' },
+      { name: categoryName, url: categoryUrl },
+      { name: prod.name, url: `/product/${id}` }
+    ]);
 
-      this.seoService.setPageSeo({
-        title: `${prod.name} | أسعار الموبايلات والاكسسوارات في العبور | القبطان ستور`,
-        description: metaDesc,
-        keywords: `${prod.name}, أسعار الموبايلات في العبور, شراء ${prod.name} في العبور, محل موبيلات في العبور, القبطان موبايل ستور`,
-        image: prod.image,
-        url: `/product/${id}`,
-        jsonLd: [breadcrumbSchema, productSchema]
-      });
-    }
+    this.seoService.setPageSeo({
+      title: `${prod.name} | أسعار الموبايلات والاكسسوارات في العبور | القبطان ستور`,
+      description: metaDesc,
+      keywords: `${prod.name}, أسعار الموبايلات في العبور, شراء ${prod.name} في العبور, محل موبيلات في العبور, القبطان موبايل ستور`,
+      image: prod.image,
+      url: `/product/${id}`,
+      jsonLd: [breadcrumbSchema, productSchema]
+    });
   }
 }
