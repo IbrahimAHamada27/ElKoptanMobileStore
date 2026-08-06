@@ -1,10 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ToastService } from '../../core/services/toast.service';
 import { environment } from '../../../environments/environment';
+
+import { SearchBarComponent } from '../../shared/search-bar/search-bar';
 
 interface AdminUser {
   _id: string;
@@ -15,7 +17,7 @@ interface AdminUser {
 
 @Component({
   selector: 'app-dashboard-admins',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SearchBarComponent],
   template: `
     <div class="admin-page-header">
       <h2>👥 إدارة حسابات المدراء</h2>
@@ -31,6 +33,11 @@ interface AdminUser {
       </div>
     </div>
 
+    <app-search-bar
+      placeholder="ابحث باسم المدير، اسم المستخدم، أو الصلاحية..."
+      (search)="onSearch($event)">
+    </app-search-bar>
+
     <div class="products-table-container">
       <table class="admin-table">
         <thead>
@@ -42,7 +49,7 @@ interface AdminUser {
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let admin of admins(); let i = index">
+          <tr *ngFor="let admin of filteredAdmins(); let i = index">
             <td [title]="admin.name">{{ admin.name }}</td>
             <td class="hash-text" [title]="admin.email">{{ admin.email.substring(0, 24) }}...</td>
             <td>
@@ -53,8 +60,8 @@ interface AdminUser {
               <button class="btn-action delete-btn" (click)="onDelete(admin._id)">حذف</button>
             </td>
           </tr>
-          <tr *ngIf="admins().length === 0">
-            <td colspan="4" class="text-center">لا توجد حسابات مدراء حالياً.</td>
+          <tr *ngIf="filteredAdmins().length === 0">
+            <td colspan="4" class="text-center" style="padding: 25px;">🔍 لا توجد نتائج مطابقة لحسابات المدراء.</td>
           </tr>
         </tbody>
       </table>
@@ -237,11 +244,28 @@ export class DashboardAdmins implements OnInit {
   toastService = inject(ToastService);
 
   admins = signal<AdminUser[]>([]);
+  searchQuery = signal<string>('');
   isModalOpen = signal(false);
   isEditMode = signal(false);
   isSaving = signal(false);
   
   editingAdminId: string | null = null;
+
+  filteredAdmins = computed(() => {
+    const list = this.admins();
+    const q = this.searchQuery().trim().toLowerCase();
+    if (!q) return list;
+
+    return list.filter(a =>
+      a.name?.toLowerCase().includes(q) ||
+      a.email?.toLowerCase().includes(q) ||
+      a.role?.toLowerCase().includes(q)
+    );
+  });
+
+  onSearch(query: string) {
+    this.searchQuery.set(query);
+  }
 
   formData = {
     name: '',

@@ -1,6 +1,12 @@
 <div class="phones-container">
   <h1 class="page-title">إكسسوارات موبايلات وجرابات وشواحن واسكرينات في مدينة العبور</h1>
-  <div class="products-grid">
+
+  <app-search-bar
+    placeholder="ابحث عن جراب، شاحن، اسكرينة، سماعة، كابل..."
+    (search)="onSearch($event)">
+  </app-search-bar>
+
+  <div class="products-grid" *ngIf="paginatedAccessories().length > 0">
     <div class="product-card" *ngFor="let item of paginatedAccessories(); let i = index">
       <div class="product-image-container">
         <a [routerLink]="['/product', item.id]" style="cursor: pointer;">
@@ -42,9 +48,16 @@
   </div>
 
   <app-pagination 
+    *ngIf="allAccessories().length > 0"
     [currentPage]="currentPage()" 
     [totalItems]="allAccessories().length" 
     [pageSize]="pageSize" 
     (pageChange)="onPageChange($event)">
   </app-pagination>
+
+  <div class="empty-state" *ngIf="allAccessories().length === 0" style="text-align: center; padding: 45px 20px;">
+    <div style="font-size: 3rem; margin-bottom: 12px;">🔍</div>
+    <h2 style="color: #1a237e; font-size: 1.4rem;">لا توجد نتائج بحث مطابقة</h2>
+    <p style="color: #64748b;">لم نجد أي إكسسوار يطابق كلمة البحث. جرب البحث باسم إكسسوار آخر!</p>
+  </div>
 </div>

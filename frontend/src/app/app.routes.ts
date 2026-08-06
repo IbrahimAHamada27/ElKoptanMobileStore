@@ -92,6 +92,7 @@ export const routes: Routes = [
       { path: '', loadComponent: () => import('./pages/home/home').then(m => m.Home), title: 'الرئيسية | القبطان موبايل ستور', data: { description: 'أفضل متجر لبيع وشراء الهواتف المحمولة والاكسسوارات في مصر' } },
       { path: 'product/:id', loadComponent: () => import('./pages/product-details/product-details').then(m => m.ProductDetails), title: 'تفاصيل المنتج | القبطان موبايل ستور', data: { description: 'تفاصيل المنتج ومواصفاته' } },
       { path: 'cart', loadComponent: () => import('./pages/cart/cart').then(m => m.Cart), title: 'سلة المشتريات | القبطان موبايل ستور', data: { description: 'عربة التسوق الخاصة بك' } },
+      { path: 'checkout', loadComponent: () => import('./pages/checkout/checkout').then(m => m.Checkout), title: 'إتمام الطلب | القبطان موبايل ستور', data: { description: 'أكمل بيانات التوصيل والدفع لطلب المنتجات' } },
       { path: 'contact', loadComponent: () => import('./pages/contact/contact').then(m => m.Contact), title: 'التواصل | القبطان موبايل ستور', data: { description: 'تواصل معنا لأي استفسار' } },
       { path: 'cash', loadComponent: () => import('./pages/cash/cash').then(m => m.Cash), title: 'الدفع | القبطان موبايل ستور' },
       { path: 'maintenance', loadComponent: () => import('./pages/maintenance/maintenance').then(m => m.Maintenance), title: 'الصيانة | القبطان موبايل ستور', data: { description: 'خدمات صيانة الموبايلات والالكترونيات' } },

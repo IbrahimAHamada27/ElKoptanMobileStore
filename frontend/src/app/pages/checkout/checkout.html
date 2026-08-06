@@ -1,0 +1,226 @@
+<div class="checkout-container">
+  <div class="checkout-header">
+    <h1 class="checkout-title">إتمام الطلب والتوصيل</h1>
+    <p class="checkout-subtitle">يرجى ملء بيانات التوصيل واختيار طريقة الدفع لتأكيد طلبك مباشرة عبر واتساب</p>
+  </div>
+
+  <div class="checkout-layout">
+    <!-- Form Section -->
+    <div class="checkout-form-section">
+      <form (submit)="$event.preventDefault(); confirmOrder()" class="checkout-form">
+        <!-- Customer Info Card -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">👤</span>
+            <h2>بيانات العميل الشخصية</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="required-label">الاسم بالكامل</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="أدخل اسمك الثلاثي أو الرباعي"
+                [(ngModel)]="formData.fullName"
+                name="fullName"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="required-label">رقم الهاتف الأساسي</label>
+              <input
+                type="tel"
+                class="form-control"
+                placeholder="010XXXXXXXX"
+                [(ngModel)]="formData.phone"
+                name="phone"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>رقم هاتف بديل (اختياري)</label>
+              <input
+                type="tel"
+                class="form-control"
+                placeholder="رقم إضافي للتواصل"
+                [(ngModel)]="formData.altPhone"
+                name="altPhone"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Info Card -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">📍</span>
+            <h2>عنوان التوصيل التفصيلي</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="required-label">المحافظة</label>
+              <select class="form-control" [(ngModel)]="formData.governorate" name="governorate" required>
+                <option *ngFor="let gov of governorates" [value]="gov">{{ gov }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="required-label">المدينة / المركز</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="مثال: مدينة العبور، بنها..."
+                [(ngModel)]="formData.city"
+                name="city"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="required-label">المنطقة / الحي</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="مثال: الحي الأول، سنتر جواهر..."
+                [(ngModel)]="formData.area"
+                name="area"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="required-label">اسم / رقم الشارع</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="اسم الشارع الرئيسي والفرعي"
+                [(ngModel)]="formData.street"
+                name="street"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label>رقم المبنى / العمارة</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="رقم أو اسم العمارة"
+                [(ngModel)]="formData.building"
+                name="building"
+              />
+            </div>
+            <div class="form-group">
+              <label>الدور والشقة</label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="الدور"
+                  [(ngModel)]="formData.floor"
+                  name="floor"
+                />
+            </div>
+            <div class="form-group full-width">
+              <label>أقرب علامة مميزة (اختياري)</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="بجوار كشري الخديوي، خلف سنتر جواهر..."
+                [(ngModel)]="formData.landmark"
+                name="landmark"
+              />
+            </div>
+            <div class="form-group full-width">
+              <label>ملاحظات الطلب (اختياري)</label>
+              <textarea
+                class="form-control textarea-control"
+                rows="2"
+                placeholder="أي تعليمات خاصة للتوصيل أو المواعيد المفضل استلام الطلب فيها..."
+                [(ngModel)]="formData.notes"
+                name="notes"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Methods Card -->
+        <div class="form-card">
+          <div class="card-header">
+            <span class="card-icon">💳</span>
+            <h2>طريقة الدفع المناسبة</h2>
+          </div>
+          <div class="payment-methods-grid">
+            <div
+              *ngFor="let method of paymentMethods"
+              class="payment-option-card"
+              [class.active]="formData.paymentMethod === method.id"
+              (click)="selectPaymentMethod(method.id)"
+            >
+              <div class="option-radio">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  [value]="method.id"
+                  [checked]="formData.paymentMethod === method.id"
+                />
+              </div>
+              <div class="option-icon">{{ method.icon }}</div>
+              <div class="option-details">
+                <h3>{{ method.label }}</h3>
+                <p>{{ method.desc }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Order Summary Sidebar -->
+    <div class="checkout-summary-section">
+      <div class="summary-card">
+        <h2 class="summary-title">ملخص المشتريات</h2>
+
+        <div class="summary-items-list">
+          <div class="summary-item" *ngFor="let item of cartService.cartItems()">
+            <img [src]="item.product.image" [alt]="item.product.name" class="summary-item-img" />
+            <div class="summary-item-info">
+              <h3 class="summary-item-name">{{ item.product.name }}</h3>
+              <p class="summary-item-qty">الكمية: {{ item.quantity }} × {{ item.product.discountPrice || item.product.price }} جنيه</p>
+            </div>
+            <div class="summary-item-price">
+              {{ (item.product.discountPrice || item.product.price) * item.quantity }} جنيه
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-totals">
+          <div class="total-row">
+            <span>مجموع المنتجات:</span>
+            <span>{{ cartService.totalPrice() }} جنيه</span>
+          </div>
+          <div class="total-row">
+            <span>التوصيل:</span>
+            <span class="free-text">حسب العنوان</span>
+          </div>
+          <div class="grand-total-row">
+            <span>الإجمالي الكلي:</span>
+            <span class="grand-total-amount">{{ cartService.totalPrice() }} جنيه</span>
+          </div>
+        </div>
+
+        <div class="summary-actions">
+          <button
+            type="button"
+            class="confirm-order-btn"
+            [disabled]="isSubmitting()"
+            (click)="confirmOrder()"
+          >
+            <span *ngIf="!isSubmitting()">تأكيد الطلب عبر واتساب 📱</span>
+            <span *ngIf="isSubmitting()">جاري تجهيز الطلب...</span>
+          </button>
+
+          <a routerLink="/cart" class="return-cart-btn">
+            العودة إلى سلة المشتريات 🛒
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

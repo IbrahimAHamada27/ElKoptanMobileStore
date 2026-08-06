@@ -47,11 +47,11 @@ exports.addProduct = async (req, res) => {
         
         const compressedBuffer = await sharp(req.file.buffer)
             .resize({ width: 600, fit: 'inside', withoutEnlargement: true })
-            .jpeg({ quality: 65 })
+            .webp({ quality: 60, effort: 6 })
             .toBuffer();
 
         const base64Data = compressedBuffer.toString('base64');
-        const imagURL = `data:image/jpeg;base64,${base64Data}`;
+        const imagURL = `data:image/webp;base64,${base64Data}`;
 
         const myProduct = await product.create({
             name, 
@@ -74,10 +74,11 @@ exports.addProduct = async (req, res) => {
 exports.getProductsBySlug = async (req, res) => {
     try {
         const slug = req.params.slug;
-        const myProducts = await product.findOne({slug});
+        const myProducts = await product.findOne({slug}).lean();
 
         if(!myProducts) return res.status(404).json({error:'product not found'});
 
+        res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=300, stale-while-revalidate=600');
         res.status(200).json({massage : `product with slug ${slug}`, data: myProducts});
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -91,10 +92,10 @@ exports.updateProduct = async (req, res) => {
         if(req.file) {
             const compressedBuffer = await sharp(req.file.buffer)
                 .resize({ width: 600, fit: 'inside', withoutEnlargement: true })
-                .jpeg({ quality: 65 })
+                .webp({ quality: 60, effort: 6 })
                 .toBuffer();
             const base64Data = compressedBuffer.toString('base64');
-            updateData.imagURL = `data:image/jpeg;base64,${base64Data}`;
+            updateData.imagURL = `data:image/webp;base64,${base64Data}`;
         }
         if (updateData.price) updateData.price = Number(updateData.price);
         if (updateData.discountPrice !== undefined) {

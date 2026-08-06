@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -15,6 +16,7 @@ export class Header implements OnInit, OnDestroy {
   hasSeenHero = false;
   isBrowser = false;
   touchStartY = 0;
+  private routerSub: Subscription;
 
   constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -24,7 +26,7 @@ export class Header implements OnInit, OnDestroy {
     } else {
       this.isHomePage = this.router.url === '/' || this.router.url === '/home';
     }
-    this.router.events.subscribe(event => {
+    this.routerSub = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isHomePage = event.url === '/' || event.url === '/home';
         this.checkScroll();
@@ -37,6 +39,9 @@ export class Header implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
+    }
     this.enableScroll();
   }
 

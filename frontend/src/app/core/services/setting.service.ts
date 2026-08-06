@@ -35,7 +35,17 @@ export class SettingService {
     this.loadAllSettings();
   }
 
-  async loadAllSettings() {
+  private loadPromise: Promise<void> | null = null;
+
+  async loadAllSettings(force: boolean = false) {
+    if (this.loadPromise && !force) {
+      return this.loadPromise;
+    }
+    this.loadPromise = this._loadAllSettingsInternal();
+    return this.loadPromise;
+  }
+
+  private async _loadAllSettingsInternal() {
     try {
       const response: any = await firstValueFrom(this.http.get(this.apiUrl));
       if (response && response.success && response.data) {

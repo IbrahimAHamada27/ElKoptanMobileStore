@@ -22,22 +22,21 @@ async function compressExistingProducts() {
                     const rawBase64 = base64Parts[1];
                     const buffer = Buffer.from(rawBase64, 'base64');
                     
-                    // Only compress if the base64 size is larger than 50KB
-                    if (buffer.length > 50 * 1024) {
-                        try {
-                            const compressedBuffer = await sharp(buffer)
-                                .resize({ width: 600, fit: 'inside', withoutEnlargement: true })
-                                .jpeg({ quality: 65 })
-                                .toBuffer();
+                    try {
+                        const compressedBuffer = await sharp(buffer)
+                            .resize({ width: 600, fit: 'inside', withoutEnlargement: true })
+                            .webp({ quality: 60, effort: 6 })
+                            .toBuffer();
 
-                            const compressedBase64 = `data:image/jpeg;base64,${compressedBuffer.toString('base64')}`;
+                        const compressedBase64 = `data:image/webp;base64,${compressedBuffer.toString('base64')}`;
+                        if (compressedBase64.length < prod.imagURL.length || !prod.imagURL.startsWith('data:image/webp;')) {
                             prod.imagURL = compressedBase64;
                             await prod.save();
                             updatedCount++;
                             console.log(`[${updatedCount}] Compressed image for product: ${prod.name} (${(buffer.length / 1024).toFixed(1)}KB -> ${(compressedBuffer.length / 1024).toFixed(1)}KB)`);
-                        } catch (err) {
-                            console.error(`Failed to compress image for product ${prod._id}: ${err.message}`);
                         }
+                    } catch (err) {
+                        console.error(`Failed to compress image for product ${prod._id}: ${err.message}`);
                     }
                 }
             }

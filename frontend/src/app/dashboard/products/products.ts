@@ -7,10 +7,11 @@ import { Title, Meta } from '@angular/platform-browser';
 import { ToastService } from '../../core/services/toast.service';
 import { computed, signal, effect } from '@angular/core';
 import { PaginationComponent } from '../../shared/pagination/pagination';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar';
 
 @Component({
   selector: 'app-dashboard-products',
-  imports: [CommonModule, FormsModule, RouterLink, PaginationComponent],
+  imports: [CommonModule, FormsModule, RouterLink, PaginationComponent, SearchBarComponent],
   templateUrl: './products.html',
   styleUrl: './products.css'
 })
@@ -25,18 +26,38 @@ export class DashboardProducts implements OnInit {
 
   currentPage = signal<number>(1);
   pageSize = 30;
+  searchQuery = signal<string>('');
 
   // Local list of products to allow in-memory reordering before saving
   localProducts = signal<Product[]>([]);
   originalProductsString = '';
   hasUnsavedChanges = false;
 
-  displayProducts = computed(() => {
+  filteredProducts = computed(() => {
     const list = this.localProducts();
+    const q = this.searchQuery().trim().toLowerCase();
+    if (!q) return list;
+
+    return list.filter(p =>
+      p.name?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q) ||
+      p.desc?.toLowerCase().includes(q) ||
+      p.slug?.toLowerCase().includes(q) ||
+      p.id?.toLowerCase().includes(q)
+    );
+  });
+
+  displayProducts = computed(() => {
+    const list = this.filteredProducts();
     const page = this.currentPage();
     const start = (page - 1) * this.pageSize;
     return list.slice(start, start + this.pageSize);
   });
+
+  onSearch(query: string) {
+    this.searchQuery.set(query);
+    this.currentPage.set(1);
+  }
 
   onPageChange(page: number) {
     this.currentPage.set(page);

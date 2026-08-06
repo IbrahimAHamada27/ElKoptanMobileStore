@@ -3,7 +3,12 @@
     القبطان موبايل ستور - أفضل محل موبايلات واكسسوارات في مدينة العبور الحي الأول
   </h1>
 
-  <div class="products-grid">
+  <app-search-bar
+    placeholder="ابحث عن اسم المنتج، الماركة، أو الفئة..."
+    (search)="onSearch($event)">
+  </app-search-bar>
+
+  <div class="products-grid" *ngIf="paginatedProducts().length > 0">
     <div class="product-card" *ngFor="let product of paginatedProducts(); let i = index">
       <div class="product-image-container">
         <a [routerLink]="['/product', product.id]" style="cursor: pointer;">
@@ -45,6 +50,7 @@
   </div>
 
   <app-pagination 
+    *ngIf="allProducts().length > 0"
     [currentPage]="currentPage()" 
     [totalItems]="allProducts().length" 
     [pageSize]="pageSize" 
@@ -52,8 +58,8 @@
   </app-pagination>
 
   <div class="empty-state" *ngIf="allProducts().length === 0">
-    <div class="empty-icon">📱</div>
-    <h2>لا توجد منتجات حالياً</h2>
-    <p>سيتم إضافة أحدث الهواتف والإكسسوارات بمدينة العبور قريباً. يرجى التحقق لاحقاً!</p>
+    <div class="empty-icon">🔍</div>
+    <h2>لا توجد نتائج بحث مطابقة</h2>
+    <p>لم نجد أي منتج يطابق كلمتك البحثية. جرب البحث باسم منتج أو فئة أخرى!</p>
   </div>
 </div>

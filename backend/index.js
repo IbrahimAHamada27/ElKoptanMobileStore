@@ -4,6 +4,7 @@ dotenv.config();
 const path = require('path');
 const express = require('express');
 const app = express();
+app.set('etag', 'strong');
 
 const cors = require('./middlewares/cors.middleware');
 app.use(cors);

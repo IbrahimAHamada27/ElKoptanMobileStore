@@ -3,6 +3,11 @@
   <a [routerLink]="['/admin/add-product']" [queryParams]="{category: category()}" class="btn-primary" style="text-decoration:none; display:inline-block; padding:10px 15px;">إضافة منتج جديد +</a>
 </div>
 
+<app-search-bar
+  placeholder="ابحث عن اسم المنتج، SKU، أو الفئة..."
+  (search)="onSearch($event)">
+</app-search-bar>
+
 <div class="products-table-container" style="margin-bottom: 20px;">
   <table class="admin-table">
     <thead>
@@ -38,15 +43,16 @@
           <button class="btn-action delete-btn" (click)="deleteProduct(product.id || '')">حذف</button>
         </td>
       </tr>
-      <tr *ngIf="localProducts().length === 0">
-        <td colspan="7" class="text-center">لا توجد منتجات حالياً.</td>
+      <tr *ngIf="filteredProducts().length === 0">
+        <td colspan="7" class="text-center" style="padding: 30px;">🔍 لا توجد نتائج بحث مطابقة للمنتجات.</td>
       </tr>
     </tbody>
   </table>
 
   <app-pagination 
+    *ngIf="filteredProducts().length > 0"
     [currentPage]="currentPage()" 
-    [totalItems]="localProducts().length" 
+    [totalItems]="filteredProducts().length" 
     [pageSize]="pageSize" 
     (pageChange)="onPageChange($event)">
   </app-pagination>

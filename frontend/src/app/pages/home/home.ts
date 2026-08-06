@@ -1,15 +1,16 @@
 import { Component, signal, inject, OnInit, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ProductService } from '../../core/services/product.service';
+import { ProductService, Product } from '../../core/services/product.service';
 import { CartService } from '../../core/services/cart.service';
 import { SettingService } from '../../core/services/setting.service';
 import { SeoService } from '../../core/services/seo.service';
 import { PaginationComponent } from '../../shared/pagination/pagination';
+import { SearchBarComponent } from '../../shared/search-bar/search-bar';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink, PaginationComponent],
+  imports: [CommonModule, RouterLink, PaginationComponent, SearchBarComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -21,16 +22,30 @@ export class Home implements OnInit {
 
   currentPage = signal<number>(1);
   pageSize = 30;
+  searchQuery = signal<string>('');
 
   allProducts = computed(() => {
     const data = this.settingService.featuredProductsSignal();
     const ids = data?.home || [];
     const products = this.productService.products();
+    let list: Product[] = [];
     if (!ids || !ids.length) {
-      return products;
+      list = products;
+    } else {
+      const featured = ids.map(id => this.productService.getProductById(id)).filter(p => !!p);
+      list = featured.length > 0 ? featured : products;
     }
-    const featured = ids.map(id => this.productService.getProductById(id)).filter(p => !!p);
-    return featured.length > 0 ? featured : products;
+
+    const q = this.searchQuery().trim().toLowerCase();
+    if (!q) return list;
+
+    return list.filter(p =>
+      p.name?.toLowerCase().includes(q) ||
+      p.category?.toLowerCase().includes(q) ||
+      p.desc?.toLowerCase().includes(q) ||
+      p.slug?.toLowerCase().includes(q) ||
+      p.id?.toLowerCase().includes(q)
+    );
   });
 
   paginatedProducts = computed(() => {
@@ -39,6 +54,11 @@ export class Home implements OnInit {
     const start = (page - 1) * this.pageSize;
     return list.slice(start, start + this.pageSize);
   });
+
+  onSearch(query: string) {
+    this.searchQuery.set(query);
+    this.currentPage.set(1);
+  }
 
   onPageChange(page: number) {
     this.currentPage.set(page);

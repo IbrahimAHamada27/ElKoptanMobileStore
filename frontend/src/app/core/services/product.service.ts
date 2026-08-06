@@ -18,6 +18,7 @@ export interface Product {
   isBestSeller?: boolean;
   orderIndex?: number;
   desc?: string;
+  slug?: string;
 }
 
 @Injectable({
@@ -37,6 +38,9 @@ export class ProductService {
   private loadPromise: Promise<void> | null = null;
 
   async loadProducts(force: boolean = false) {
+    if (this.productsSignal().length > 0 && !force) {
+      return;
+    }
     if (this.loadPromise && !force) {
       return this.loadPromise;
     }
