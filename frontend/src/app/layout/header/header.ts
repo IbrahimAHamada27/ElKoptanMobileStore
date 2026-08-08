@@ -111,9 +111,6 @@ export class Header implements OnInit, OnDestroy {
     if (this.isBrowser) {
       document.body.style.overflow = 'hidden';
       document.documentElement.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = '0';
     }
   }
 
@@ -121,9 +118,6 @@ export class Header implements OnInit, OnDestroy {
     if (this.isBrowser) {
       document.body.style.overflow = '';
       document.documentElement.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
     }
   }
 
